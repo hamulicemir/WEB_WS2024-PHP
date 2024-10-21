@@ -20,19 +20,15 @@
           </div>
     
           <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-            <li><a href="#" class="nav-link px-2">Pictures</a></li>
-            <li><a href="FAQ.html" class="nav-link px-2">FAQs</a></li>
-            <li><a href="impressum.html" class="nav-link px-2">Impressum</a></li>
+            <li><a href="./index.php" class="nav-link px-2 link-secondary">Home</a></li>
+            <li><a href="./pictures.php" class="nav-link px-2">Pictures</a></li>
+            <li><a href="./FAQ.php" class="nav-link px-2">FAQs</a></li>
+            <li><a href="./impressum.php" class="nav-link px-2">Impressum</a></li>
           </ul>
     
           <div class="col-md-3 text-end">
-            <a href="login.html">
-                <button type="button" class="btn btn-outline-primary me-2">Login</button>
-            </a>
-            <a href="registration.html">
-                <button type="button" class="btn btn-primary">Sign-up</button>
-            </a>
+            <a href="./login.php"><button type="button" class="btn btn-outline-primary me-2">Login</button></a>
+            <a href="./registration.php"><button type="button" class="btn btn-primary">Sign-up</button></a>
           </div>
         </header>
       </div>
