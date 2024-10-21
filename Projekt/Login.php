@@ -7,6 +7,8 @@
     <title>User-Login</title>
 </head>
 <body id="login-body">
+    <?php include 'nav.php';?>
+
     <div class="background"></div>
         <div class="login-box">
             <h2>Login</h2>

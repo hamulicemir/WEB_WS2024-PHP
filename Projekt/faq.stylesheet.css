@@ -1,7 +1,6 @@
 body {
     font-family: Arial, sans-serif;
     height: 100%;
-    padding: 20px;
     margin: 0;
     background-color: #f4f4f4;
 }
@@ -13,7 +12,6 @@ h1 {
 details {
     background-color: white;
     margin-bottom: 10px;
-    padding: 15px;
     border-left: 3px solid black;
 }
 summary {
@@ -27,8 +25,10 @@ summary {
 summary:hover {
     background-color: #d3d3d3;
 }
+
 p {
     margin: 10px 0;
+    padding-left: 10px;
 }
 @media (max-width: 1024px) {
     h1 {

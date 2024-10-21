@@ -7,6 +7,7 @@
     <title>Registration</title>
 </head>
 <body>
+    <?php include 'nav.php';?>
     <div class="background"></div>
     <form action="./registration.html" method="post" class="registration-box">
         <h2>Registration</h2>
