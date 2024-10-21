@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrierung</title>
+</head>
+<body>
+    
+    <form action="./Registrierung.html" method="post">  </form>
+
+    <label for="anrede">Anrede:</label>
+    <select id="anrede">
+        <option value="" disabled selected>Wählen si eine Anrede</option>
+        <option value="frau">Frau</option>
+        <option value="herr">Herr</option>Registrierung.html
+    </select>
+    <br>
+    <br>
+    <label for="vorname">Vorname:</label>
+    <input id="vorname" type="text" required/>
+    <br>
+    <br>
+    <label for="nachname">Nachname:</label>
+    <input id="nachname" type="text" required/>
+    <br>
+    <br>
+    <label for="email">E-mail Adresse:</label>
+    <input id="email" type="email" placeholder="name@expample.com" required/>
+    <br>
+    <br>
+    <label for="username">Username:</label>
+    <input id="username" type="text" required/>
+    <br>
+    <br>
+    <label for="passwort">Passwort:</label>
+    <input id="passwort" type="password" required minlength="8" placeholder="min. 8 characters" autocomplete="off" required/>
+    <br>
+    <label for="retypePasswort">Retype Passwort:</label>
+    <input id="retypePasswort" type="password" placeholder="Passwort wiederholen" required />
+    <br>
+    <br>
+    <input type="submit" value="Registrieren" />
+
+</body>
+</html>
