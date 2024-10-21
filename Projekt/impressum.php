@@ -11,7 +11,7 @@
 <body>
     <?php include 'nav.php';?>
         <div class="container mt-5">
-            <h1 class="mb-4">Impressum</h1>
+            <h1 class="mb-4 text-center">Impressum</h1>
             <div class="card p-4">
                 <h2 class="h5">Hotel GmbH</h2>
                 <p>Gesellschaft mit beschränkter Haftung</p>

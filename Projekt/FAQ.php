@@ -3,76 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    
-    <link href="faq.stylesheet.css" rel="stylesheet"/> 
-    <title>Hilfe & FAQs – Hotelzimmerreservierungs-Website</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    <link href="faq.stylesheet.css" rel="stylesheet"/> 
+    <title>Hilfe & FAQs - Hotelzimmerreservierungs-Website</title>
 </head>
 <body>
     <?php include 'nav.php';?>
-
+ 
     <div class="container mt-5">
-        <h1 class="mb-4">Hilfe & FAQs</h1>
-        <div class="card p-4">
-            <details>
-            <summary><strong>1. Wie registriere ich mich?</strong></summary>
-            <p>Klicken Sie oben rechts auf „Registrieren“.</p>
-            <p>Geben Sie Ihre persönlichen Daten ein (Anrede, Vorname, Nachname, E-Mail, Benutzername, Passwort).</p>
-            <p>Stellen Sie sicher, dass das Passwort zweimal korrekt eingegeben wird, um Tippfehler zu vermeiden.</p>
-            <p>Klicken Sie auf „Abschicken“, um Ihre Registrierung abzuschließen.</p>
-            </details>
+        <h1 class="mb-4 text-center">Hilfe & FAQs</h1>
+        <div class="accordion accordion-flush" id="accordionFlushFAQs">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingOne">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        1. Wie melde ich mich an?
+                    </button>
+                </h2>       
+                <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushFAQs">
+                    <div class="accordion-body">
+                        Klicken Sie auf „Login“ und geben Sie Ihren Benutzernamen und Ihr Passwort ein. Wenn die Daten korrekt sind, werden Sie auf die Startseite weitergeleitet und sehen eine Willkommensnachricht.
+                    </div>
+                </div>
+            </div>
 
-            <details>
-                <summary><strong>2. Wie melde ich mich an?</strong></summary>
-                <p>Klicken Sie auf „Login“ und geben Sie Ihren Benutzernamen und Ihr Passwort ein.</p>
-                <p>Wenn die Daten korrekt sind, werden Sie auf die Startseite weitergeleitet und sehen eine Willkommensnachricht.</p>
-            </details>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                        2. Wie reserviere ich ein Zimmer?
+                    </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushFAQs">
+                    <div class="accordion-body">
+                        Nachdem Sie sich eingeloggt haben, klicken Sie auf „Zimmer reservieren“. Wählen Sie den gewünschten Zeitraum, Zimmeroptionen (mit/ohne Frühstück, Parkplatz, Haustiermitnahme). Klicken Sie auf „Reservieren“, um die Buchung abzuschließen. Sie können Ihre Reservierungen jederzeit unter „Meine Reservierungen“ einsehen.
+                    </div>
+                </div>
+            </div>
 
-            <details>
-                <summary><strong>3. Wie reserviere ich ein Zimmer?</strong></summary>
-                <p>Nachdem Sie sich eingeloggt haben, klicken Sie auf „Zimmer reservieren“.</p>
-                <p>Wählen Sie den gewünschten Zeitraum, Zimmeroptionen (mit/ohne Frühstück, Parkplatz, Haustiermitnahme).</p>
-                <p>Klicken Sie auf „Reservieren“, um die Buchung abzuschließen.</p>
-                <p>Sie können Ihre Reservierungen jederzeit unter „Meine Reservierungen“ einsehen.</p>
-            </details>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingThree">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                        3. Kann ich meine Reservierung stornieren oder ändern?
+                    </button>
+                </h2>
+                <div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushFAQs">
+                    <div class="accordion-body">
+                        Ja, Sie können Ihre Reservierung unter „Meine Reservierungen“ ansehen und bei Bedarf stornieren.
+                    </div>
+                </div>
+            </div>
 
-            <details>
-                <summary><strong>4. Kann ich meine Reservierung stornieren oder ändern?</strong></summary>
-                <p>Ja, Sie können Ihre Reservierung unter „Meine Reservierungen“ ansehen und bei Bedarf stornieren.</p>
-            </details>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingFour">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                        4. Welche zusätzlichen Leistungen sind buchbar?
+                    </button>
+                </h2>
+                <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushFAQs">
+                    <div class="accordion-body">
+                        Neben dem Zimmer können Sie optional Frühstück, einen Parkplatz und die Mitnahme eines Haustieres hinzufügen. Diese Optionen sind mit einem Aufpreis verbunden, den Sie bei der Reservierung sehen.
+                    </div>
+                </div>
+            </div>
 
-            <details>
-                <summary><strong>5. Welche zusätzlichen Leistungen sind buchbar?</strong></summary>
-                <p>Neben dem Zimmer können Sie optional Frühstück, einen Parkplatz und die Mitnahme eines Haustieres hinzufügen. Diese Optionen sind mit einem Aufpreis verbunden, den Sie bei der Reservierung sehen.</p>
-            </details>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingFive">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFive" aria-expanded="false" aria-controls="flush-collapseFive">
+                        5. Wie poste ich als Administrator eine Nachricht?
+                    </button>
+                </h2>
+                <div id="flush-collapseFive" class="accordion-collapse collapse" aria-labelledby="flush-headingFive" data-bs-parent="#accordionFlushFAQs">
+                    <div class="accordion-body">
+                        Wenn Sie Administrator sind, sehen Sie im Menü die Option „News-Beiträge“. Hier können Sie Nachrichten erstellen und Bilder hochladen, die dann auf der Startseite erscheinen.
+                    </div>
+                </div>
+            </div>
 
-            <details>
-                <summary><strong>6. Wie poste ich als Administrator eine Nachricht?</strong></summary>
-                <p>Wenn Sie Administrator sind, sehen Sie im Menü die Option „News-Beiträge“. Hier können Sie Nachrichten erstellen und Bilder hochladen, die dann auf der Startseite erscheinen.</p>
-            </details>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingSix">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSix" aria-expanded="false" aria-controls="flush-collapseSix">
+                        6. Wer kann die News-Beiträge sehen?
+                    </button>
+                </h2>
+                <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix" data-bs-parent="#accordionFlushFAQs">
+                    <div class="accordion-body">
+                        Alle Benutzer, auch anonyme Gäste, können die News-Beiträge der Administratoren sehen.
+                    </div>
+                </div>
+            </div>
 
-            <details>
-                <summary><strong>7. Wer kann die News-Beiträge sehen?</strong></summary>
-                <p>Alle Benutzer, auch anonyme Gäste, können die News-Beiträge der Administratoren sehen.</p>
-            </details>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingSeven">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseSeven" aria-expanded="false" aria-controls="flush-collapseSeven">
+                        7. Welche Benutzerrollen gibt es?
+                    </button>
+                </h2>
+                <div id="flush-collapseSeven" class="accordion-collapse collapse" aria-labelledby="flush-headingSeven" data-bs-parent="#accordionFlushFAQs">
+                    <div class="accordion-body">
+                        <strong>Anonyme Benutzer:</strong> Können News lesen, die Hilfe- und Impressumsseite einsehen, und sich registrieren.<br>
+                        <strong>Registrierte Benutzer:</strong> Können Zimmer buchen, Reservierungsdetails einsehen und ihr Profil verwalten.<br>
+                        <strong>Administratoren:</strong> Können zusätzlich News posten, Reservierungen und Benutzer verwalten.
+                    </div>
+                </div>
+            </div>
 
-            <details>
-                <summary><strong>8. Welche Benutzerrollen gibt es?</strong></summary>
-                <p><strong>Anonyme Benutzer:</strong> Können News lesen, die Hilfe- und Impressumsseite einsehen, und sich registrieren.</p>
-                <p><strong>Registrierte Benutzer:</strong> Können Zimmer buchen, Reservierungsdetails einsehen und ihr Profil verwalten.</p>
-                <p><strong>Administratoren:</strong> Können zusätzlich News posten, Reservierungen und Benutzer verwalten.</p>
-            </details>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingEight">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseEight" aria-expanded="false" aria-controls="flush-collapseEight">
+                        8. Was kann ich tun, wenn ich mein Passwort vergessen habe?
+                    </button>
+                </h2>
+                <div id="flush-collapseEight" class="accordion-collapse collapse" aria-labelledby="flush-headingEight" data-bs-parent="#accordionFlushFAQs">
+                    <div class="accordion-body">
+                        Bitte wenden Sie sich an einen Administrator, um Ihr Passwort zurückzusetzen.
+                    </div>
+                </div>
+            </div>
 
-            <details>
-                <summary><strong>9. Was kann ich tun, wenn ich mein Passwort vergessen habe?</strong></summary>
-                <p>Bitte wenden Sie sich an einen Administrator, um Ihr Passwort zurückzusetzen.</p>
-            </details>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="flush-headingNine">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseNine" aria-expanded="false" aria-controls="flush-collapseNine">
+                        9. Wie melde ich mich ab?
+                    </button>
+                </h2>
+                <div id="flush-collapseNine" class="accordion-collapse collapse" aria-labelledby="flush-headingNine" data-bs-parent="#accordionFlushFAQs">
+                    <div class="accordion-body">
+                        Klicken Sie auf „Logout“, um sich von der Website abzumelden.
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <details>
-                <summary><strong>10. Wie melde ich mich ab?</strong></summary>
-                <p>Klicken Sie auf „Logout“, um sich von der Website abzumelden.</p>
-            </details>
-        </div> 
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-94c5iyuy3O9LB6q5Ao8q5ZtkKYZ5vMZsfX2l6rFxDQlQQZLQp+lD4oDNeTy2g1B5" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 </body>
 </html>
