@@ -7,7 +7,7 @@
     <title>User-Login</title>
     <style>
         .background {
-            background-image: url(pexels-pixabay-258154.jpg);
+            background-image: url(./Pictures/pexels-pixabay-258154.jpg);
             background-size: cover;
             background-position: center;
             position: fixed;
@@ -19,12 +19,12 @@
     </style>
 </head>
 <body>
-    <?php include 'nav.php'; ?>
+    <?php include './inc/nav.php';?>
     <div class="background"></div>
     <div class="container-fluid vh-100 d-flex justify-content-center align-items-center">
         <div class="row w-100">
             <div class="col-md-4 mx-auto">
-                <div class="card p-4">
+                <div class="card p-4 p-md-5">
                     <h2 class="fw-bold mb-3 mx-auto">Login</h2>
                     <form action="./test.html" method="post">
                         <div class="form-floating mb-3">

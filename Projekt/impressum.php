@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <?php include 'nav.php';?>
+    <?php include './inc/nav.php';?>
         <div class="container mt-5">
             <h1 class="mb-4 text-center">Impressum</h1>
             <div class="card p-4">

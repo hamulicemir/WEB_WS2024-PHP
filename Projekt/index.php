@@ -10,12 +10,15 @@
 <body>
   <div class="header">
   </div>
-    <?php include 'nav.php';?>
+    <?php include './inc/nav.php';?>
 
       <main>
         <div class="content">
           <h1>Welcome to the Adi & Emir Hotels</h1>
           <p>Your comfort is our priority.</p>
+        </div>
+        <div class=container>
+          <h2>Newsfeed</h2>
         </div>
       </main>
 

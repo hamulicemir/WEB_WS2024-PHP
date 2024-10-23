@@ -7,12 +7,12 @@
     <title>S</title>
     <style>
         .background {
-            background-image: url(pexels-pixabay-258154.jpg);
+            background-image: url(./Pictures/pexels-pixabay-258154.jpg);
             background-size: cover;
             background-position: center;
             position: fixed;
             width: 100%;
-            height: 100%;
+            height: 120%;
             z-index: -1;
             filter: blur(5px);
         }
@@ -20,7 +20,7 @@
 </head>
 
 <body>
-    <?php include 'nav.php'; ?>
+    <?php include './inc/nav.php';?>
     <div class="background"></div>
     <section class="vh-100 gradient-custom">
   <div class="container py-5 h-100">
