@@ -4,13 +4,7 @@ session_start();
 $validEmail = "test@email.com";
 $validPassword = "123";
 
-function sanitize_input($input): string
-{
-    $output = trim($input);
-    $output = stripslashes($output);
-    $output = htmlspecialchars($output);
-    return $output;
-}
+include './inc/functions.php';
 
 $errors = [];
 $errors["formEmail"] = false;
@@ -27,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["Session_Email"] = $enteredEmail;
         $_SESSION["Session_Password"] = $enteredPassword;
         $loginSuccess = true;
-        
-        header("Location: index.php");
+
+        //header("Location: index.php");
     } else {
         $_SESSION['loggedin'] = false;
         if ($enteredEmail !== $validEmail) $errors["formEmail"] = true;
@@ -68,51 +62,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class="card-body p-4 p-md-5">
-                            <h2 class="fw-bold mb-3 mx-auto text-center">Login</h2>
-                            
+
                             <?php if ($loginSuccess): ?>
-                                <div class="alert alert-success" role="alert">
-                                    Login erfolgreich! Willkommen zurück!
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
                                 </div>
+                                <script>
+                                    setTimeout(function() {
+                                        window.location.href = "index.php";
+                                    }, 1000);
+                                </script>
                             <?php endif; ?>
-                            
-                            <form action="" method="POST">
-                                <div class="form-floating mb-3">
-                                    <input type="email" 
-                                    class="form-control 
-                                    <?php echo $errors['formEmail'] ? 'is-invalid' : ($enteredEmail ? 'is-valid' : ''); ?>" 
-                                    id="floatingEmail" 
-                                    placeholder="name@example.com" 
-                                    name="formEmail" 
-                                    value="<?php if(isset($enteredEmail)) echo $enteredEmail;?>"
-                                    required>
+                            <?php if (!$_SESSION['loggedin']) : ?>
+                                <h2 class="fw-bold mb-3 mx-auto text-center">Login</h2>
+                                <form action="" method="POST">
+                                    <div class="form-floating mb-3">
+                                        <input type="email"
+                                            class="form-control 
+                                    <?php echo $errors['formEmail'] ? 'is-invalid' : ($enteredEmail ? 'is-valid' : ''); ?>"
+                                            id="floatingEmail"
+                                            placeholder="name@example.com"
+                                            name="formEmail"
+                                            value="<?php if (isset($enteredEmail)) echo $enteredEmail; ?>"
+                                            required>
 
-                                    <label for="floatingEmail">Email Adresse</label>
+                                        <label for="floatingEmail">Email Adresse</label>
 
-                                    <?php if ($errors["formEmail"]): ?>
-                                        <div class="invalid-feedback">Ungültige E-Mail-Adresse.</div>
-                                    <?php endif; ?>
-                                </div>
+                                        <?php if ($errors["formEmail"]): ?>
+                                            <div class="invalid-feedback">Ungültige E-Mail-Adresse.</div>
+                                        <?php endif; ?>
+                                    </div>
 
-                                <div class="form-floating mb-3">
-                                    <input 
-                                    type="password" 
-                                    class="form-control 
-                                    <?php if(!$errors["formEmail"]) echo $errors['formPassword'] ? 'is-invalid' : ($enteredPassword ? 'is-valid' : ''); ?>" 
-                                    id="floatingPassword" 
-                                    placeholder="Passwort" 
-                                    name="formPassword" 
-                                    required>
+                                    <div class="form-floating mb-3">
+                                        <input
+                                            type="password"
+                                            class="form-control 
+                                    <?php if (!$errors["formEmail"]) echo $errors['formPassword'] ? 'is-invalid' : ($enteredPassword ? 'is-valid' : ''); ?>"
+                                            id="floatingPassword"
+                                            placeholder="Passwort"
+                                            name="formPassword"
+                                            required>
 
-                                    <label for="floatingPassword">Passwort</label>
-                                    <?php if ($errors["formPassword"]): ?>
-                                        <div class="invalid-feedback">Falsches Passwort.</div>
-                                    <?php endif; ?>
-                                </div>
-                                <p class="small mt-2"><a class="text-black" href="#!">Passwort vergessen?</a></p>
-                                <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Login</button>
-                            </form>
-
+                                        <label for="floatingPassword">Passwort</label>
+                                        <?php if ($errors["formPassword"]): ?>
+                                            <div class="invalid-feedback">Falsches Passwort.</div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <p class="small mt-2"><a class="text-black" href="#!">Passwort vergessen?</a></p>
+                                    <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Login</button>
+                                </form>
+                            <?php else : ?>
+                                <h2 class="fw-bold mx-auto text-center mt-3">You are logged in.</h2>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

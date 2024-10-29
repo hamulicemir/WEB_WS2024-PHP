@@ -21,7 +21,7 @@
           <?php else : ?>
             <div class="col-md-3 text-end">
             <?php echo $_SESSION["Session_Email"]?>
-            <a href="./logout.php"><button type="button" class="btn btn-primary">Log-Out</button></a>
+            <a href="./logout.php"><button type="button" class="btn btn-primary ms-3">Log-Out</button></a>
           </div>
           <?php endif; ?>
         </header>
