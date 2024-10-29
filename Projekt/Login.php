@@ -1,18 +1,40 @@
-<?php 
-    session_start();
+<?php
+session_start();
 
-    function sanitize_input($input) : string {
-        $output = trim($input);
-        $output = stripslashes($output);
-        $output = htmlspecialchars($output);
-        return $output;
+$validEmail = "test@email.com";
+$validPassword = "123";
+
+function sanitize_input($input): string
+{
+    $output = trim($input);
+    $output = stripslashes($output);
+    $output = htmlspecialchars($output);
+    return $output;
+}
+
+$errors = [];
+$errors["formEmail"] = false;
+$errors["formPassword"] = false;
+$loginSuccess = false;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $enteredEmail = sanitize_input($_POST["formEmail"]);
+    $enteredPassword = sanitize_input($_POST["formPassword"]);
+
+    // Login-Prüfung
+    if ($enteredEmail === $validEmail && $enteredPassword === $validPassword) {
+        $_SESSION['loggedin'] = true;
+        $_SESSION["Session_Email"] = $enteredEmail;
+        $_SESSION["Session_Password"] = $enteredPassword;
+        $loginSuccess = true;
+        
+        header("Location: index.php");
+    } else {
+        $_SESSION['loggedin'] = false;
+        if ($enteredEmail !== $validEmail) $errors["formEmail"] = true;
+        if ($enteredPassword !== $validPassword) $errors["formPassword"] = true;
     }
-
-
-    $_SESSION["name"] = "Jim";
-    if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $enteredEmail = sanitize_input($_GET[]);
-    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -47,18 +69,50 @@
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class="card-body p-4 p-md-5">
                             <h2 class="fw-bold mb-3 mx-auto text-center">Login</h2>
-                            <form>
-                                <div class="form-floating mb-3">
-                                    <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com" name="formEmail" required>
-                                    <label for="floatingEmail">Email Adresse</label>
+                            
+                            <?php if ($loginSuccess): ?>
+                                <div class="alert alert-success" role="alert">
+                                    Login erfolgreich! Willkommen zurück!
                                 </div>
+                            <?php endif; ?>
+                            
+                            <form action="" method="POST">
                                 <div class="form-floating mb-3">
-                                    <input type="password" class="form-control" id="floatingPassword" placeholder="Password" ame="formPassword" required>
+                                    <input type="email" 
+                                    class="form-control 
+                                    <?php echo $errors['formEmail'] ? 'is-invalid' : ($enteredEmail ? 'is-valid' : ''); ?>" 
+                                    id="floatingEmail" 
+                                    placeholder="name@example.com" 
+                                    name="formEmail" 
+                                    value="<?php if(isset($enteredEmail)) echo $enteredEmail;?>"
+                                    required>
+
+                                    <label for="floatingEmail">Email Adresse</label>
+
+                                    <?php if ($errors["formEmail"]): ?>
+                                        <div class="invalid-feedback">Ungültige E-Mail-Adresse.</div>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input 
+                                    type="password" 
+                                    class="form-control 
+                                    <?php if(!$errors["formEmail"]) echo $errors['formPassword'] ? 'is-invalid' : ($enteredPassword ? 'is-valid' : ''); ?>" 
+                                    id="floatingPassword" 
+                                    placeholder="Passwort" 
+                                    name="formPassword" 
+                                    required>
+
                                     <label for="floatingPassword">Passwort</label>
+                                    <?php if ($errors["formPassword"]): ?>
+                                        <div class="invalid-feedback">Falsches Passwort.</div>
+                                    <?php endif; ?>
                                 </div>
                                 <p class="small mt-2"><a class="text-black" href="#!">Passwort vergessen?</a></p>
                                 <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Login</button>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -69,4 +123,5 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

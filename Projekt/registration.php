@@ -30,7 +30,7 @@
           <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
             <div class="card-body p-4 p-md-5">
               <h2 class="fw-bold mb-3 mx-auto text-center">Sign-Up</h2>
-              <form>
+              <form action="./registration.php" method="POST">
                 <div class="row">
                   <div class="col-md-6 mb-2">
 
