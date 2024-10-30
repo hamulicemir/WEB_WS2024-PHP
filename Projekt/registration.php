@@ -8,24 +8,63 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $birthday = sanitize_input($_POST['formBirthdate']);
   $gender = sanitize_input($_POST['formGender']);
   $email = sanitize_input($_POST['formEMail']);
-  $username = sanitize_input($_POST['formUsername']);
+  $Username = sanitize_input($_POST['formUsername']);
   $password = sanitize_input($_POST['formPassword']);
   $passwordRepeat = sanitize_input($_POST['formPasswordSecond']);
 
-  $EmptyForm = false;
+ // Fehler-Flags initialisieren
+ $emptyForm = false;
+ $passwordDoesNotMatch = false;
+ $errors = [];
 
-  if (empty($firstName) || empty($lastName) || empty($birthday) || empty($gender) || empty($email) || empty($username) || empty($password) || empty($passwordRepeat)) {
-    $EmptyForm = true;
-  }
+ // Überprüfung auf leere Felder
+ if (empty($firstname) || empty($lastName) || empty($birthday) || empty($gender) || 
+     empty($email) || empty($Username) || empty($password) || empty($passwordRepeat)) {
+   $emptyForm = true;
+   $errors[] = "Alle Felder müssen ausgefüllt sein.";
+ }
 
+ // Überprüfung auf Passwortübereinstimmung
+ if ($passwordRepeat !== $password) {
+   $passwordDoesNotMatch = true;
+   $errors[] = "Die Passwörter stimmen nicht überein.";
+ }
 
+ // Überprüfung der E-Mail-Adresse
+ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+   $errors[] = "Ungültige E-Mail-Adresse.";
+ }
+
+ // Optionale Überprüfung des Geburtsdatums (zum Beispiel: Mindestalter prüfen)
+ $dateNow = new DateTime();
+ $birthDate = DateTime::createFromFormat('Y-m-d', $birthday);
+ if (!$birthDate || $birthDate > $dateNow) {
+   $errors[] = "Ungültiges Geburtsdatum.";
+ }
+
+ // Benutzername auf Länge prüfen (z.B. mindestens 3 Zeichen)
+ if (strlen($Username) < 3) {
+   $errors[] = "Der Benutzername muss mindestens 3 Zeichen lang sein.";
+ }
+
+ // Ausgabe der Fehler oder weitere Verarbeitung
+ if (!empty($errors)) {
+   // Fehler anzeigen
+   foreach ($errors as $error) {
+     echo "<p style='color:red;'>$error</p>";
+   }
+ } else {
+   // Falls alles korrekt ist, weitere Verarbeitung (z.B. Speichern der Daten)
+   echo "<p style='color:green;'>Alle Daten sind korrekt.</p>";
+   // Hier könnte die Speicherung in einer Datenbank folgen
+ }
 }
 
 ?>
 
 <!DOCTYPE html>
 <html lang="de">
-  
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,7 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2">
 
                     <div class="form-floating mb-2">
-                      <input type="text" id="firstName" class="form-control form-control-lg" placeholder="first name" name="formFirstname" />
+                      <input type="text" id="firstName" required class="form-control form-control-lg" placeholder="first name" name="formFirstname" value="<?php if (isset($firstname)) echo $firstname; ?>" />
                       <label for="firstName">First Name</label>
                     </div>
 
@@ -68,10 +107,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2">
 
                     <div class="form-floating mb-2">
-                      <input type="text" id="lastName" class="form-control form-control-lg" placeholder="last name" name="formLastname" />
+                      <input type="text" id="lastName" required class="form-control form-control-lg" placeholder="last name" name="formLastname" value="<?php if (isset($lastName)) echo $lastName; ?>" />
                       <label for="lastName">Last Name</label>
                     </div>
-                     
+
                   </div>
                 </div>
 
@@ -79,32 +118,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2 d-flex align-items-center">
 
                     <div class="form-floating mb-2 datepicker w-100">
-                      <input type="date" id="birthdayDate" class="form-control form-control-lg" placeholder="first name" name="formBirthdate" />
+                      <input type="date" id="birthdayDate" required class="form-control form-control-lg" placeholder="first name" name="formBirthdate" value="<?php if (isset($birthday)) echo $birthday; ?>" />
                       <label for="birthdayDate">Birthday</label>
                     </div>
 
                   </div>
                   <div class="col-md-6 mb-2">
                     <h6 class="mb-2 pb-1">Gender: </h6>
-
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="formGender" id="femaleGender"
-                        value="female" checked />
+                      <input class="form-check-input" type="radio" required name="formGender" id="femaleGender" value="female" <?php if (isset($gender) && $gender == "female") echo "checked" ?> />
                       <label class="form-check-label" for="femaleGender">Female</label>
                     </div>
 
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="formGender" id="maleGender"
-                        value="male" />
+                      <input class="form-check-input" type="radio" required name="formGender" id="maleGender" value="male" <?php if (isset($gender) && $gender == "male") echo "checked" ?> />
                       <label class="form-check-label" for="maleGender">Male</label>
                     </div>
 
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="formGender" id="otherGender"
-                        value="other" />
+                      <input class="form-check-input" type="radio" required name="formGender" id="otherGender" value="other" <?php if (isset($gender) && $gender == "other") echo "checked" ?> />
                       <label class="form-check-label" for="otherGender">Other</label>
                     </div>
-
                   </div>
                 </div>
 
@@ -112,7 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2 pb-2">
 
                     <div class="form-floating mb-1">
-                      <input type="email" id="emailAddress" class="form-control form-control-lg" placeholder="name@example.com" name="formEMail" />
+                      <input type="email" id="emailAddress" required class="form-control form-control-lg" placeholder="name@example.com" name="formEMail" value="<?php if (isset($email)) echo $email; ?>" />
                       <label class="form-label" for="emailAddress">E-Mail</label>
                     </div>
 
@@ -120,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2 pb-2">
 
                     <div class="form-floating mb-2">
-                      <input type="text" id="username" class="form-control form-control-lg" placeholder="Username" name="formUsername" />
+                      <input type="text" id="username" required class="form-control form-control-lg" placeholder="Username" name="formUsername" autocomplete="off" value="<?php if (isset($Username)) echo $Username; ?>" />
                       <label for="username">Username</label>
                     </div>
 
@@ -130,14 +164,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="row">
                   <div class="col-md-6 mb-2 pb-2">
                     <div class="form-floating mb-2">
-                      <input type="password" id="passwordfirst" class="form-control form-control-lg" placeholder="password" name="formPassword" />
+                      <input type="password" id="passwordfirst" required class="form-control form-control-lg" placeholder="password" name="formPassword" />
                       <label for="passwordfirst">Password</label>
                     </div>
                   </div>
 
                   <div class="col-md-6 mb-1 pb-1">
                     <div class="form-floating mb-2">
-                      <input type="password" id="passwordsecond" class="form-control form-control-lg" placeholder="password" name="formPasswordSecond" />
+                      <input type="password" id="passwordsecond" required class="form-control form-control-lg" placeholder="password" name="formPasswordSecond" />
                       <label for="passwordsecond">Repeat Password</label>
                     </div>
                   </div>
@@ -147,9 +181,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="">
                   <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Sign-Up</button>
                 </div>
-                <?php  if($EmptyForm) : ?>
+                <?php if ($EmptyForm) : ?>
                   <p class="m-3 mx-auto text-center text-danger">Das Formular ist unvollständig</p>
-                  <?php endif; ?>
+                <?php endif; ?>
+                <?php if ($PasswordDoesNotMatch) : ?>
+                  <p class="m-3 mx-auto text-center text-danger">Das Password ist nicht gleich.</p>
+                <?php endif; ?>
               </form>
             </div>
           </div>

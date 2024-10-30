@@ -5,5 +5,4 @@
     $output = htmlspecialchars($output);
     return $output;
 }
-
 ?>
