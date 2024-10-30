@@ -32,6 +32,5 @@
             </div>
         </div>
         
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-94c5iyuy3O9LB6q5Ao8q5ZtkKYZ5vMZsfX2l6rFxDQlQQZLQp+lD4oDNeTy2g1B5" crossorigin="anonymous"></script>
     </body>
 </html>
