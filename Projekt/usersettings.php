@@ -69,13 +69,15 @@
                     </div>
 
             <button type="button" class="btn btn-primary">Update Profile</button>
+            <?php //hier Modal einbauen & nachfragen ob Settings gesaved werden sollen?>
+
             <button type="reset" class="btn btn-light">Reset Changes</button>
             <hr>
             <div class="form-group">
               <label class="d-block .text-black mb-1">Change Password</label>
               <p class="text-muted font-size-sm">To change your password, you have to type the old password.</p>
             </div>
-            <button class="btn btn-primary" type="button">Change Password</button>
+            <button class="btn btn-primary" onclick="window.location.href='./changepassword.php'" type="button">Change Password</button>
             
             <hr>
             <div class="form-group">
@@ -83,6 +85,7 @@
               <p class="text-muted font-size-sm">Once you delete your account, there is no going back. Please be certain.</p>
             </div>
             <button class="btn btn-danger" type="button">Delete Account</button>
+            <?php //hier Modal einbauen & nachfragen ob Account wirklich gelöscht werden soll?>
           </form>
         </div>
         

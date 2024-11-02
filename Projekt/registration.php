@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errors[] = "Ungültiger Nachname";
   }
 
-  if ($passwordRepeat !== $password) {
+  if (!validate_Repeat_Password($password, $passwordRepeat)) {
     $passwordDoesNotMatch = true;
     $errors[] = "Die Passwörter stimmen nicht überein.";
   }
@@ -61,6 +61,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (strlen($Username) < 3) {
     $UsernameError = true;
     $errors[] = "Der Benutzername muss mindestens 3 Zeichen lang sein.";
+    //Überprüfung der Datenbank auf bestehende Usernamen, um sicherzugehen, dass dieser Username einzigartig ist. (in Zukunft)
+    /* if(DBUsername == $Username){
+        $errors[] = "Der Benutzername ist bereits vergeben.";
+        $UsernameError = true;
+        }
+        else{
+          DB TABLE INSERT $USERNAME ...
+        }
+    }
+    */
   }
 
   if (empty($errors)) {

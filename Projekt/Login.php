@@ -112,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Login</button>
                                 </form>
                             <?php else : ?>
-                                <h2 class="fw-bold mx-auto text-center mt-3">You are logged in.</h2>
+                                <h2 class="fw-bold mx-auto text-center mt-3">Welcome <?php //echo Username aus Datenbank ziehen statt User...?>User!</h2>
                             <?php endif; ?>
                         </div>
                     </div>
