@@ -1,16 +1,20 @@
 <?php 
-    session_start();
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+    
+    $errors = [];
+    $errors["old_password"] = false;
+    $errors["new_password"] = false;
+    $errors["repeat_new_password"] = false;
+    $errors["formPassword"] = false;
+
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $loggedin = $_SESSION['loggedin'];
         $session_email = $_SESSION["Session_Email"];
         $session_password = $_SESSION["Session_Password"];
         include './inc/functions.php';
-        
-
-        $errors = [];
-        $errors["old_password"] = false;
-        $errors["new_password"] = false;
-        $errors["repeat_new_password"] = false;
 
         if (empty($enteredOldPassword) || empty($enteredNewPassword) || empty($enteredRepeatNewPassword)) {
             $emptyForm = true;
