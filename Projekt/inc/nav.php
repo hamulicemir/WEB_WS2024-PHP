@@ -33,6 +33,7 @@ if (session_status() == PHP_SESSION_NONE) {
           </a>
           <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
             <li><a class="dropdown-item" href="./usersettings.php">Settings</a></li>
+            <li><a class="dropdown-item" href="./reservation-list.php">Reservations</a></li>
             <li><a class="dropdown-item" href="./logout.php">Sign out</a></li>
           </ul>
         </div>
