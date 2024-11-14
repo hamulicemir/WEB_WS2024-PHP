@@ -46,7 +46,7 @@
         <div class="tab-pane active" id="account">
           <h6>YOUR ACCOUNT SETTINGS</h6>
           <hr>
-          <form>
+          <form> <!-- Form muss noch vervollständigt werden-->
             <div class="form-floating mb-3">
               <input type="text" required class="form-control form-control-lg" id="firstname" placeholder="firstname" value=""> <!-- Hier Daten aus Datenbank einfügen -->
               <label for="firstname">First Name</label>
@@ -92,7 +92,7 @@
         <div class="tab-pane" id="notification">
           <h6>NOTIFICATION SETTINGS</h6>
           <hr>
-          <form>
+          <form> <!-- Form muss noch vervollständigt werden-->
             <div class="form-group">
               <label class="d-block mb-0">Alerts</label>
               <div class="custom-control custom-checkbox">

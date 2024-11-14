@@ -32,11 +32,11 @@ $reservations = [
 
 // Wenn das Formular für eine neue Reservierung abgeschickt wurde
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $checkin = $_POST['checkin'];
-    $checkout = $_POST['checkout'];
-    $breakfast = isset($_POST['breakfast']);
-    $parking = isset($_POST['parking']);
-    $pets = isset($_POST['pets']);
+    $checkin = sanitize_input($_POST['checkin']);
+    $checkout = sanitize_input($_POST['checkout']);
+    $breakfast = sanitize_input(isset($_POST['breakfast']));
+    $parking = sanitize_input(isset($_POST['parking']));
+    $pets = sanitize_input(isset($_POST['pets']));
 
     // Validierung des Datums
     if (strtotime($checkout) <= strtotime($checkin)) {
