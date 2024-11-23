@@ -200,7 +200,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       <label for="passwordsecond">Repeat Password</label>
                     </div>
                   </div>
-                  <p class="small"><a class="text-black" href="#!">Bereits registriert?</a></p>
+                  <p class="small"><a class="text-black" href="./Login.php">Bereits registriert?</a></p>
                 </div>
 
                 <div class="">

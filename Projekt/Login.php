@@ -16,13 +16,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $enteredPassword = sanitize_input($_POST["formPassword"]);
 
     // Login-Prüfung
-    if ($enteredEmail === $validEmail && $enteredPassword === $validPassword) {
+    if ($enteredEmail == $validEmail && $enteredPassword == $validPassword) {
         $_SESSION['loggedin'] = true;
         $_SESSION["Session_Email"] = $enteredEmail;
         $_SESSION["Session_Password"] = $enteredPassword;
         $loginSuccess = true;
 
-        //header("Location: index.php");
+        header("Location: index.php");
     } else {
         $_SESSION['loggedin'] = false;
         if ($enteredEmail !== $validEmail) $errors["formEmail"] = true;
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class="card-body p-4 p-md-5">
 
-                            <?php if ($loginSuccess): ?>
+                            <?php if ($_SESSION['loggedin']): ?>
                                 <div class="progress">
                                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
                                 </div>
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     }, 1000);
                                 </script>
                             <?php endif; ?>
-                            <?php if (!$_SESSION['loggedin']) : ?>
+                            <?php if (isset($_SESSION)) : ?>
                                 <h2 class="fw-bold mb-3 mx-auto text-center">Login</h2>
                                 <form action="" method="POST">
                                     <div class="form-floating mb-3">

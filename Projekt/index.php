@@ -1,3 +1,6 @@
+<?php 
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,9 +20,7 @@
           <h1>Welcome to the Adi & Emir Hotels</h1>
           <p>Your comfort is our priority.</p>
         </div>
-        <div class=container>
           <h2>Newsfeed</h2>
-        </div>
       </main>
 
       <footer class="footer">
