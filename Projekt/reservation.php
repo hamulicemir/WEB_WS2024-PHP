@@ -72,8 +72,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
     <title>Reservation</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <?php include './inc/nav.php'; ?>
+    <main class="container my-3 flex-fill">
     <div class="container">
         <div class="row justify-content-center align-items-center h-100">
             <div class="col-12 col-lg-9 col-xl-7">
@@ -136,6 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </div>
+    </main>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
