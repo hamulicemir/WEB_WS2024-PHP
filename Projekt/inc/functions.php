@@ -11,59 +11,68 @@ function validate_Repeat_Password($p, $repeatP) : bool{
   return $repeatP === $p;
 }
 
-function processNewsImage($file) : bool
+function createThumbnail($srcPath, $destPath, $width, $height): bool
 {
-    $thumbDir = __DIR__ . '/Pictures/Thumbnails/';
-
-    if (!is_dir($thumbDir)) {
-        mkdir($thumbDir, 0777, true);
-    }
-
-    // Überprüfen, ob das hochgeladene Bild ein JPEG ist
-    $fileType = mime_content_type($file['tmp_name']);
-    if ($fileType != 'image/jpeg') {
-        echo "<div class='alert alert-danger'>Fehler: Nur JPEG-Bilder sind erlaubt.</div>";
+    if (!file_exists($srcPath)) {
+        echo "<div class='alert alert-danger'>Fehler: Quelldatei $srcPath existiert nicht.</div>";
         return false;
     }
 
-    $thumbnailPath = $thumbDir . basename($file['name']);
-    if (!createThumbnail($newsImagePath, $thumbnailPath, 720, 480)) {
-        echo "<div class='alert alert-danger'>Fehler beim Erstellen des Thumbnails.</div>";
+    $imageInfo = getimagesize($srcPath);
+    if ($imageInfo === false || $imageInfo[2] !== IMAGETYPE_JPEG) {
+        echo "<div class='alert alert-danger'>Fehler: Bildinformationen konnten nicht abgerufen werden oder das Bild ist kein JPEG.</div>";
         return false;
     }
 
-    echo "<div class='alert alert-success'>News-Bild und Thumbnail wurden erfolgreich erstellt.</div>";
-    return true;
-}
+    $srcWidth = $imageInfo[0];
+    $srcHeight = $imageInfo[1];
+    if ($srcWidth < $width || $srcHeight < $height) {
+        echo "<div class='alert alert-danger'>createThumbnail: Originalbild ist kleiner als das gewünschte Thumbnail.</div>";
+        return false;
+    }
 
-function createThumbnail($srcPath, $destPath, $width, $height) : bool
-{
     $srcImage = imagecreatefromjpeg($srcPath);
-    if (!$srcImage) {
+    if ($srcImage === false) {
+        echo "<div class='alert alert-danger'>Fehler: Das Quellbild $srcPath konnte nicht geladen werden.</div>";
         return false;
     }
 
-    // Originalbild-Größe ermitteln
-    $origWidth = imagesx($srcImage);
-    $origHeight = imagesy($srcImage);
-
-    // Thumbnail-Ressource erstellen
-    $thumbImage = imagecreatetruecolor($width, $height);
-
-    // Originalbild auf Thumbnail-Größe skalieren
-    if (!imagecopyresampled($thumbImage, $srcImage, 0, 0, 0, 0, $width, $height, $origWidth, $origHeight)) {
+    $thumbnail = imagecreatetruecolor($width, $height);
+    if ($thumbnail === false) {
+        echo "<div class='alert alert-danger'>Fehler: Fehler beim Erstellen der Thumbnail-Ressource.</div>";
+        imagedestroy($srcImage);
         return false;
     }
 
-    // Thumbnail als JPEG speichern
-    if (!imagejpeg($thumbImage, $destPath)) {
+    $srcWidth = imagesx($srcImage);
+    $srcHeight = imagesy($srcImage);
+
+    if ($srcWidth < $width || $srcHeight < $height) {
+        echo "<div class='alert alert-danger'>Fehler: Originalbild ist kleiner als das gewünschte Thumbnail ($srcWidth x $srcHeight) < ($width x $height).</div>";
+        imagedestroy($srcImage);
+        imagedestroy($thumbnail);
         return false;
     }
 
-    // Speicher freigeben
+    if (!imagecopyresampled($thumbnail, $srcImage, 0, 0, 0, 0, $width, $height, $srcWidth, $srcHeight)) {
+        echo "<div class='alert alert-danger'>Fehler: Fehler beim Resampling des Bildes.</div>";
+        imagedestroy($srcImage);
+        imagedestroy($thumbnail);
+        return false;
+    }
+
+    if (!imagejpeg($thumbnail, $destPath)) {
+        echo "<div class='alert alert-danger'>Fehler: Fehler beim Speichern des Thumbnails nach $destPath.</div>";
+        imagedestroy($srcImage);
+        imagedestroy($thumbnail);
+        return false;
+    }
+
     imagedestroy($srcImage);
-    imagedestroy($thumbImage);
+    imagedestroy($thumbnail);
 
     return true;
 }
+
+
 ?>

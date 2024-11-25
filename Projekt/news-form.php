@@ -1,22 +1,42 @@
-<?php session_start();
+<?php
+session_start();
 include "./inc/functions.php";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $newsTitel = sanitize_input($_POST['newsTitel']);
     $newsText = sanitize_input($_POST['newsText']);
 
-    if(isset($_FILES['newsFoto']) && $_FILES['newsFoto']['error'] == 0){
+    if (isset($_FILES['newsFoto']) && $_FILES['newsFoto']['error'] == 0) {
         $thumbDir = './Pictures/Thumbnails/';
-        if(!is_dir($thumbDir)){
+        $resizedDir = './Pictures/Thumbnails-resized/';
+
+        if (!is_dir($thumbDir)) {
             mkdir($thumbDir, 0777, true);
         }
-        $thumbName = $thumbDir . basename($_FILES['newsFoto']['name']);
-        if(move_uploaded_file($_FILES['newsFoto']['tmp_name'], $thumbName)){
-            echo "<div class='alert alert-success'>News-Beitrag wurde erfolgreich erstellt und das Bild hochgeladen.</div>";
-        }else{
-            echo "<div class='alert alert-danger'>Fehler beim Erstellen des Thumbnails.</div>";
+        if (!is_dir($resizedDir)) {
+            mkdir($resizedDir, 0777, true);
         }
-    }
-    else {
+
+        // Pfade definieren
+        $thumbName = $thumbDir . $newsText . ".jpeg";
+        $destinationPath = $resizedDir . $newsText . ".jpeg";
+
+        $_SESSION["NewsPost"] = ['newsTitel' => $newsTitel, 'newsText' => $newsText, 'newsFotoPath' => $destinationPath];
+
+        // Datei verschieben
+        if (move_uploaded_file($_FILES['newsFoto']['tmp_name'], $thumbName)) {
+            echo "<div class='alert alert-success'>News-Beitrag wurde erfolgreich erstellt und das Bild hochgeladen.</div>";
+
+            // Thumbnail erstellen
+            if (createThumbnail($thumbName, $destinationPath, 640, 360)) { //720x480 auch möglich
+                echo "<div class='alert alert-success'>Thumbnail erfolgreich erstellt.</div>";
+            } else {
+                echo "<div class='alert alert-danger'>Fehler beim Erstellen des Thumbnails.</div>";
+            }
+        } else {
+            echo "<div class='alert alert-danger'>Fehler beim Hochladen des Bildes.</div>";
+        }
+    } else {
         echo "<div class='alert alert-danger'>Fehler beim Hochladen des Bildes.</div>";
     }
 }
@@ -54,6 +74,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <label for="newsFoto" class="form-label">Foto</label>
                                 <input type="file" class="form-control" id="newsFoto" name="newsFoto"
                                        accept="image/*" required>
+                                <div class="text-muted mt-1" id="fileHelp">
+                                    <label for="newsFoto">Nur JPEG-Dateien.</label>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-primary">Post</button>
                         </form>

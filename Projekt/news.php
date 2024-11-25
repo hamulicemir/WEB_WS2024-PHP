@@ -1,6 +1,6 @@
 <?php
     session_start();
-    $thumbnailsDir = './Pictures/Thumbnail/';
+    $thumbnailsDir = './Pictures/Thumbnails-resized/';
 ?>
 
 <!DOCTYPE html>
@@ -21,28 +21,32 @@
           <div class="col-8 mb-4">
               <h2 class="mb-4">Neueste Beiträge</h2>
           </div>
-          <div class="col-4 mb-4 d-flex justify-content-end">
-              <a href="./news-form.php"><button type="button" class="btn btn-primary me-3">Neuer Beitrag</button></a>
-          </div>
+          <?php
+          if($_SESSION['loggedin']) : //Rechte abfrage später?>
+              <div class="col-4 mb-4 d-flex justify-content-end">
+                  <a href="./news-form.php"><button type="button" class="btn btn-primary me-3">Neuer Beitrag</button></a>
+              </div>
+          <?php endif; ?>
 
           <?php
+          $post = $_SESSION["NewsPost"];
           $posts = [
               [
-                  "title" => "1. Beitrag",
+                  "title" => "Test",
                   "text" => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                  "image" => $thumbnailsDir . "thumbnail1.jpeg",
+                  "image" => './Pictures/Thumbnails-resized/Test.jpeg',
                   "date" => "2024-11-23"
               ],
               [
                   "title" => "2. Beitrag",
                   "text" => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                  "image" => $thumbnailsDir . "thumbnail2.jpeg",
+                  "image" => $thumbnailsDir,
                   "date" => "2024-11-22"
               ],
               [
                   "title" => "3. Beitrag",
                   "text" => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                  "image" => $thumbnailsDir . "thumbnail3.jpeg",
+                  "image" => $thumbnailsDir,
                   "date" => "2024-11-21"
               ]
           ];
@@ -50,9 +54,11 @@
           foreach ($posts as $post) : ?>
           <div class="col-12 mb-4">
               <div class="card h-100">
-                  <img src="<?php echo $post['image'] ?>" class="card-img-top" alt="Thumbnail">
+                  <?php if (!empty($post['image']) && file_exists($post['image'])) : ?>
+                          <img src="<?php echo $post['image']; ?>" class="card-img-top" alt="Thumbnail">
+                  <?php endif; ?>
                   <div class="card-body">
-                      <h5 class="card-title"><?php echo $post['title']?></h5>
+                      <h2 class="card-title "><?php echo $post['title']?></h2>
                       <p class="card-text"><?php echo $post['text']?></p>
                   </div>
                   <div class="card-footer">
