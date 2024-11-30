@@ -11,7 +11,7 @@
       <li><a href="./FAQ.php" class="nav-link px-2">FAQs</a></li>
       <li><a href="./impressum.php" class="nav-link px-2">Impressum</a></li>
     </ul>
-    <?php if (!$_SESSION["loggedin"]) : ?>
+    <?php if (!($_SESSION["loggedin"])) : ?>
       <div class="col-md-3 text-end">
         <a href="./login.php"><button type="button" class="btn btn-outline-primary me-2">Login</button></a>
         <a href="./registration.php"><button type="button" class="btn btn-primary">Sign-Up</button></a>
