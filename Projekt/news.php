@@ -29,7 +29,6 @@
           <?php endif; ?>
 
           <?php
-          $post = $_SESSION["NewsPost"];
           $posts = [
               [
                   "title" => "Test",

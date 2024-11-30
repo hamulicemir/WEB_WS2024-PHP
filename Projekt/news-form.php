@@ -21,8 +21,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $thumbName = $thumbDir . $newsText . ".jpeg";
         $destinationPath = $resizedDir . $newsText . ".jpeg";
 
-        $_SESSION["NewsPost"] = ['newsTitel' => $newsTitel, 'newsText' => $newsText, 'newsFotoPath' => $destinationPath];
-
         // Datei verschieben
         if (move_uploaded_file($_FILES['newsFoto']['tmp_name'], $thumbName)) {
             echo "<div class='alert alert-success'>News-Beitrag wurde erfolgreich erstellt und das Bild hochgeladen.</div>";
