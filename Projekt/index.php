@@ -20,7 +20,6 @@ session_start();
           <h1>Welcome to the Adi & Emir Hotels</h1>
           <p>Your comfort is our priority.</p>
         </div>
-          <h2>Newsfeed</h2>
       </main>
 
       <footer class="footer">
