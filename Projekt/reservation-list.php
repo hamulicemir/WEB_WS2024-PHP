@@ -47,47 +47,45 @@ $reservations = [
 <body>
     <?php include './inc/nav.php'; ?>
     <div class="container">
-        <div class="row justify-content-center align-items-center h-100">
-            <div class="col-12 col-lg-9 col-xl-7">
-                <div class="card shadow-2-strong rounded-corners">
-                    <div class="card-body p-4 p-md-2">
-                        <h1 class="mt-1 text-center">Ihre Reservierungen</h1>
-                        
-                        <div class="mt-4">
-                            <h3 class="text-center">Ihre Reservierungen</h3>
-                            <table class="table table-striped mt-3">
-                                <thead>
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="col-12 col-lg-9 col-xl-7">
+            <div class="card shadow-2-strong rounded-corners">
+                <div class="card-body p-4 p-md-2">
+                    <h1 class="mt-1 text-center">Ihre Reservierungen</h1>
+                    <hr class="hr" />
+                    <div class="table-responsive">
+                        <table class="table table-striped mt-3">
+                            <thead>
+                                <tr>
+                                    <th class="col">ID</th>
+                                    <th class="col">Check-in</th>
+                                    <th class="col">Check-out</th>
+                                    <th class="col">Status</th>
+                                    <th class="col">Frühstück</th>
+                                    <th class="col">Parken</th>
+                                    <th class="col">Haustiere</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($reservations as $reservation) : ?>
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Check-in</th>
-                                        <th>Check-out</th>
-                                        <th>Status</th>
-                                        <th>Frühstück</th>
-                                        <th>Parken</th>
-                                        <th>Haustiere</th>
+                                        <td><?php echo $reservation['id']; ?></td>
+                                        <td><?php echo $reservation['checkin']; ?></td>
+                                        <td><?php echo $reservation['checkout']; ?></td>
+                                        <td><?php echo ucfirst($reservation['status']); ?></td>
+                                        <td><?php echo $reservation['breakfast'] ? 'Ja' : 'Nein'; ?></td>
+                                        <td><?php echo $reservation['parking'] ? 'Ja' : 'Nein'; ?></td>
+                                        <td><?php echo $reservation['pets'] ? 'Ja' : 'Nein'; ?></td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($reservations as $reservation) : ?>
-                                        <tr>
-                                            <td><?php echo $reservation['id']; ?></td>
-                                            <td><?php echo $reservation['checkin']; ?></td>
-                                            <td><?php echo $reservation['checkout']; ?></td>
-                                            <td><?php echo ucfirst($reservation['status']); ?></td>
-                                            <td><?php echo $reservation['breakfast'] ? 'Ja' : 'Nein'; ?></td>
-                                            <td><?php echo $reservation['parking'] ? 'Ja' : 'Nein'; ?></td>
-                                            <td><?php echo $reservation['pets'] ? 'Ja' : 'Nein'; ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                    </div>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>                        
                 </div>
             </div>
         </div>
     </div>
+</div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errors[] = "Alle Felder müssen ausgefüllt sein.";
   }
 
-  if (strlen($firstname) > 40 || strlen($firstname) < 1) {
+  if (strlen($firstname) > 40 || strlen($firstname) < 2) {
     $firstnameError = true;
     $errors[] = "Ungültiger Vorname";
   }
@@ -72,13 +72,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     */
   }
-
   if (empty($errors)) {
     // Falls alles korrekt ist, weitere Verarbeitung (z.B. Speichern der Daten)
     // Hier könnte die Speicherung in einer Datenbank folgen   
   }
+  if (($emptyForm || $firstnameError || $lastNameError || $passwordDoesNotMatch || $EMailError || $birtdayError || $UsernameError))
+    $_SESSION['loggedin'] = false;
+  else {
+    $_SESSION['loggedin'] = true;
+    header("Location: index.php");    
+  }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -206,10 +210,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="">
                   <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Sign-Up</button>
                 </div>
-                <?php if ($EmptyForm) : ?>
+                <?php if ($emptyForm) : ?>
                   <p class="m-3 mx-auto text-center text-danger">Das Formular ist unvollständig</p>
                 <?php endif; ?>
-                <?php if ($PasswordDoesNotMatch) : ?>
+
+                <?php if ($passwordDoesNotMatch) : ?>
                   <p class="m-3 mx-auto text-center text-danger">Das Password ist nicht gleich.</p>
                 <?php endif; ?>
               </form>
