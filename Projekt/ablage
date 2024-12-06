@@ -1,0 +1,42 @@
+if (strlen($Username) < 3) {
+    $usernameError = true;
+    $errors[] = "Der Benutzername muss mindestens 3 Zeichen lang sein.";
+  }
+  else{
+    $stmt = $conn->prepare("SELECT * FROM User WHERE Username = ?");
+    if($stmt) {
+      $stmt->bind_param("s", $Username);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      echo $result;
+      if($result->num_rows > 0){
+        $errors[] = "Der Benutzername ist bereits vergeben.";
+      }
+      $stmt->close();
+    }
+    else{
+      $errors[] = "Fehler bei der Datenbankabfrage: " . $conn->error;
+    }
+    
+  }
+
+if (empty($errors)) {
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt = $conn->prepare("INSERT INTO User (Username, Email, hashedPassword, Firstname, Lastname, Birthday, Gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssi", $Username, $email, $hashedPassword, $firstname, $lastName, $birthDate->format('Y-m-d'), $gender);
+    if($stmt->execute()){
+      $_SESSION["loggedin"] = true;
+      $_SESSION["Username"] = $Username;
+      header("Location: index.php");
+      exit();
+    }
+    else{
+      $errors[] = "Fehler beim Speichern der Daten. Bitte versuchen Sie es später erneut.";
+    }
+    $stmt->close();
+  }
+  else{
+    $_SESSION["loggedin"] = false;
+  }
+  $conn->close();

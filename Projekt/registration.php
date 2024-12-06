@@ -1,8 +1,14 @@
 <?php
 session_start();
 include './inc/functions.php';
+include("./inc/dbconnection.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  if(!$conn){
+    die("Datenbankverbindung fehlgeschlagen: " . mysqli_connect_error());
+  }
+
   $firstname = sanitize_input($_POST["formFirstname"]);
   $lastName = sanitize_input($_POST['formLastname']);
   $birthday = sanitize_input($_POST['formBirthdate']);
@@ -12,14 +18,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $password = sanitize_input($_POST['formPassword']);
   $passwordRepeat = sanitize_input($_POST['formPasswordSecond']);
 
+  //based on this article: https://en.wikipedia.org/wiki/ISO/IEC_5218
+  switch($gender){ 
+    case "male": 
+      $gender = 1; 
+      break;
+    case "female": 
+      $gender = 2; 
+      break;
+    case "other": 
+      $gender = 0; 
+      break;
+  }  
+
   //Flags
-  $emptyForm = false;
   $firstnameError = false;
   $lastNameError = false;
-  $passwordDoesNotMatch = false;
-  $EMailError = false;
   $birtdayError = false;
+  $EMailError = false;
   $UsernameError = false;
+  $emptyForm = false;
+  $passwordDoesNotMatch = false;
   $errors = [];
 
   //Überprüfungen
@@ -37,7 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   if (strlen($lastName) > 40 || strlen($lastName) < 1) {
-    $lastNameError = true;
     $errors[] = "Ungültiger Nachname";
   }
 
@@ -47,41 +65,59 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 
   if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $EMailError = true;
     $errors[] = "Ungültige E-Mail-Adresse.";
   }
 
   $dateNow = new DateTime();
   $birthDate = DateTime::createFromFormat('Y-m-d', $birthday);
   if (!$birthDate || $birthDate > $dateNow) {
-    $birtdayError = true;
     $errors[] = "Ungültiges Geburtsdatum.";
+  }
+  else{
+    $birthDate = (string) $birthDate;
   }
 
   if (strlen($Username) < 3) {
-    $UsernameError = true;
+    $usernameError = true;
     $errors[] = "Der Benutzername muss mindestens 3 Zeichen lang sein.";
-    //Überprüfung der Datenbank auf bestehende Usernamen, um sicherzugehen, dass dieser Username einzigartig ist. (in Zukunft)
-    /* if(DBUsername == $Username){
-        $errors[] = "Der Benutzername ist bereits vergeben.";
-        $UsernameError = true;
-        }
-        else{
-          DB TABLE INSERT $USERNAME ...
-        }
+  }
+  else{
+    $stmt = $conn->prepare("SELECT * FROM User WHERE Username = ?");
+    $stmt->bind_param("s", $Username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if($result->num_rows > 0){
+      $errors[] = "Der Benutzername ist bereits vergeben.";
+      $UsernameError = true;
     }
-    */
+    $stmt->close();
   }
-  if (empty($errors)) {
-    // Falls alles korrekt ist, weitere Verarbeitung (z.B. Speichern der Daten)
-    // Hier könnte die Speicherung in einer Datenbank folgen   
-  }
-  if (($emptyForm || $firstnameError || $lastNameError || $passwordDoesNotMatch || $EMailError || $birtdayError || $UsernameError))
-    $_SESSION['loggedin'] = false;
-  else {
-    $_SESSION['loggedin'] = true;
-    header("Location: index.php");    
-  }
+
+  if(empty($errors)){
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    //$birthDateFormatted = $birthDate->format('Y-m-d');
+    $birthDateFormatted = "2024-11-24";
+    $roleID = 2;
+    $gender = 1;
+    $status = "User";
+
+    $stmt = $conn->prepare("INSERT INTO `User` (`Username`, `Email`, `password_hash`, `Role_ID`, `Firstname`, `Lastname`, `Birthday`, `Gender`, `status_user`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    if (!$stmt) {
+      die("Fehler bei der Vorbereitung der Abfrage: " . $conn->error);
+    }
+
+    $stmt->bind_param("sssisssis", $Username, $email, $hashedPassword, $roleID, $firstname, $lastName, $birthDateFormatted, $gender, $status);
+
+    if($stmt->execute()){
+      echo "Erfolgreich angelegt";
+    }
+    else{
+      die("Fehler beim Anlegen: " . $stmt->error);
+    }
+    $stmt->close();
+  }else
+    echo "Fehler!";
 }
 ?>
 
