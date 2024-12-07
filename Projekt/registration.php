@@ -90,37 +90,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $errors[] = "Der Benutzername ist bereits vergeben.";
       $UsernameError = true;
     }
-    $stmt->close();
+    else{
+      echo "Username ist verfügbar!";
+    }
   }
-
-  if(empty($errors)){
+    /*
+  if (empty($errors)) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    //$birthDateFormatted = $birthDate->format('Y-m-d');
     $birthDateFormatted = "2024-11-24";
     $roleID = 2;
     $gender = 1;
     $status = "User";
 
-    $preparedInsertStatemant = "INSERT INTO User (Username, password_hash, email) VALUES (?,?,?)"; 
-
+    $preparedInsertStatemant = "INSERT INTO User (Username, Email, password_hash, Role_ID, Firstname, Lastname, Birthday, Gender, status_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($preparedInsertStatemant);
 
     if (!$stmt) {
-      die("Fehler bei der Vorbereitung der Abfrage: " . $conn->error);
+        die("Fehler bei der Vorbereitung der Abfrage: " . $conn->error);
     }
 
-    $stmt->bind_param("sss", $Username, $hashedPassword, $email);
+    $stmt->bind_param("ss", $Username, $email, $hashedPassword, $email, $birthDateFormatted, $roleID, $gender, $status);
 
-    if($stmt->execute()){
-      echo "Erfolgreich angelegt";
-    }
-    else{
-      die("Fehler beim Anlegen: " . $stmt->error);
+    if ($stmt->execute()) {
+        echo "Erfolgreich angelegt";
+    } else {
+        die("Fehler beim Anlegen: " . $stmt->error);
     }
     $stmt->close();
-  }else
-    echo "Fehler!";
-}
+    } else {
+      echo "Fehler!";
+    }
+      */
+  }
+   
 ?>
 
 <!DOCTYPE html>
@@ -155,7 +157,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
             <div class="card-body p-4 p-md-5">
               <h2 class="fw-bold mb-3 mx-auto text-center">Sign-Up</h2>
-              <form action="" method="POST">
+              <form action="registration.php" method="POST">
                 <div class="row">
                   <div class="col-md-6 mb-2">
 
