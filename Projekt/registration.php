@@ -101,13 +101,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $gender = 1;
     $status = "User";
 
-    $stmt = $conn->prepare("INSERT INTO `User` (`Username`, `Email`, `password_hash`, `Role_ID`, `Firstname`, `Lastname`, `Birthday`, `Gender`, `status_user`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $preparedInsertStatemant = "INSERT INTO User (Username, password_hash, email) VALUES (?,?,?)"; 
+
+    $stmt = $conn->prepare($preparedInsertStatemant);
 
     if (!$stmt) {
       die("Fehler bei der Vorbereitung der Abfrage: " . $conn->error);
     }
 
-    $stmt->bind_param("sssisssis", $Username, $email, $hashedPassword, $roleID, $firstname, $lastName, $birthDateFormatted, $gender, $status);
+    $stmt->bind_param("sss", $Username, $hashedPassword, $email);
 
     if($stmt->execute()){
       echo "Erfolgreich angelegt";
