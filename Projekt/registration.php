@@ -68,14 +68,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errors[] = "Ungültige E-Mail-Adresse.";
   }
 
-  $dateNow = new DateTime();
-  $birthDate = DateTime::createFromFormat('Y-m-d', $birthday);
-  if (!$birthDate || $birthDate > $dateNow) {
-    $errors[] = "Ungültiges Geburtsdatum.";
-  }
-  else{
-    $birthDate = (string) $birthDate;
-  }
 
   if (strlen($Username) < 3) {
     $usernameError = true;
@@ -94,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       echo "Username ist verfügbar!";
     }
   }
-    /*
+  
   if (empty($errors)) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $birthDateFormatted = "2024-11-24";
@@ -109,10 +101,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Fehler bei der Vorbereitung der Abfrage: " . $conn->error);
     }
 
-    $stmt->bind_param("ss", $Username, $email, $hashedPassword, $email, $birthDateFormatted, $roleID, $gender, $status);
+    $stmt->bind_param("sssisssis", $Username, $email, $hashedPassword,$roleID,$firstname,$lastName, $birthDateFormatted,  $gender, $status);
 
     if ($stmt->execute()) {
-        echo "Erfolgreich angelegt";
+        echo "Erfolgreich angelegt"; // !!!redirect einfügen!!!
     } else {
         die("Fehler beim Anlegen: " . $stmt->error);
     }
@@ -120,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
       echo "Fehler!";
     }
-      */
+      
   }
    
 ?>
