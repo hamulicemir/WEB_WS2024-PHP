@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include("dbaccess.php");
 global $conn;
 if (!isset($conn) || $conn === null) {

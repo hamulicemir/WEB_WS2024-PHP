@@ -1,6 +1,6 @@
 <?php
     $host = "localhost";
-    $user = "web_Emir";
+    $user = "Emir";
     $password = "Emir2411_";
     $database = "bif1webtechdb";
 ?>

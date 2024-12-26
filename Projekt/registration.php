@@ -242,11 +242,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="">
                   <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Sign-Up</button>
                 </div>
-                <?php if ($emptyForm) : ?>
+                <?php if (isset($emptyForm) && $emptyForm) : ?>
                   <p class="m-3 mx-auto text-center text-danger">Das Formular ist unvollständig</p>
                 <?php endif; ?>
 
-                <?php if ($passwordDoesNotMatch) : ?>
+                <?php if (isset($passwordDoesNotMatch) && $passwordDoesNotMatch) : ?>
                   <p class="m-3 mx-auto text-center text-danger">Das Password ist nicht gleich.</p>
                 <?php endif; ?>
               </form>
