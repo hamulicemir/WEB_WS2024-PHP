@@ -96,8 +96,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   var_dump($errors);
   if (empty($errors)) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $birthDateFormatted = "2024-11-24";
-    var_dump($birthday);
     $roleID = 2;
     $status = "User";
 

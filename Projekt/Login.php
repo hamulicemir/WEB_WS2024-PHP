@@ -5,10 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
 include './inc/functions.php';
 include("./inc/dbconnection.php");
 
-$validUser = "admin";
-$validPassword = "123";
-
-
 
 $errors = [];
 $errors["formUser"] = false;
@@ -19,22 +15,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if(!$conn){
     die("Datenbankverbindung fehlgeschlagen: " . mysqli_connect_error());
   }
-    $enteredEmail = sanitize_input($_POST["formUser"]);
+    $enteredUser = sanitize_input($_POST["formUser"]);
     $enteredPassword = sanitize_input($_POST["formPassword"]);
 
+    $stmt = $conn->prepare("SELECT * FROM User WHERE Username = ?");
+    $stmt->bind_param("s", $enteredUser);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    if ($enteredEmail == $validUser && $enteredPassword == $validPassword) {
-        $_SESSION['loggedin'] = true;
-        $_SESSION["Session_User"] = $enteredUser;
-        $_SESSION["Session_Password"] = $enteredPassword;
-        $loginSuccess = true;
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        $_SESSION["UserInformation"] = $user;
+        $hashedPassword = $user['password_hash'];
 
-        header("Location: index.php");
+        if (password_verify($enteredPassword, $hashedPassword)) {
+            $_SESSION['loggedin'] = true;
+            $_SESSION["Session_User"] = $enteredUser;
+
+            header("Location: index.php");
+            exit();
+        }
+        else {
+            $_SESSION['loggedin'] = false;
+            $errors["formPassword"] = true;
+        }
     } else {
         $_SESSION['loggedin'] = false;
-        if ($enteredUser !== $validUser) $errors["formUser"] = true;
-        if ($enteredPassword !== $validPassword) $errors["formPassword"] = true;
     }
+    $stmt->close();
 }
 ?>
 
@@ -45,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title>User-Login</title>
+    <title>Login</title>
     <style>
         .background {
             background-image: url(./Pictures/pexels-pixabay-258154.jpg);
@@ -84,17 +92,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <form action="" method="POST">
                                     <div class="form-floating mb-3">
                                         <input type="text"
-                                            class="form-control 
-                                    <?php echo $errors['formUser'] ? 'is-invalid' : ($enteredUser ? 'is-valid' : ''); ?>"
+                                            class="form-control"
                                             id="floatingUser"
                                             placeholder="name@example.com"
-                                            name="formEmail"
+                                            name="formUser"
                                             value="<?php if (isset($enteredUser)) echo $enteredUser; ?>"
                                             required>
 
                                         <label for="floatingUser">Username</label>
 
-                                        <?php if ($errors["formEmail"]): ?>
+                                        <?php if ($errors["formUser"]): ?>
                                             <div class="invalid-feedback">Ungültiger Username.</div>
                                         <?php endif; ?>
                                     </div>
@@ -103,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <input
                                             type="password"
                                             class="form-control 
-                                    <?php if (!$errors["formEmail"]) echo $errors['formPassword'] ? 'is-invalid' : ($enteredPassword ? 'is-valid' : ''); ?>"
+                                    <?php if (!$errors["formUser"]) echo $errors['formPassword'] ? 'is-invalid' : ($enteredPassword ? 'is-valid' : ''); ?>"
                                             id="floatingPassword"
                                             placeholder="Passwort"
                                             name="formPassword"
