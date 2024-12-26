@@ -2,32 +2,37 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+include './inc/functions.php';
+include("./inc/dbconnection.php");
 
-$validEmail = "test@email.com";
+$validUser = "admin";
 $validPassword = "123";
 
-include './inc/functions.php';
+
 
 $errors = [];
-$errors["formEmail"] = false;
+$errors["formUser"] = false;
 $errors["formPassword"] = false;
 $loginSuccess = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $enteredEmail = sanitize_input($_POST["formEmail"]);
+  if(!$conn){
+    die("Datenbankverbindung fehlgeschlagen: " . mysqli_connect_error());
+  }
+    $enteredEmail = sanitize_input($_POST["formUser"]);
     $enteredPassword = sanitize_input($_POST["formPassword"]);
 
-    // Login-Prüfung
-    if ($enteredEmail == $validEmail && $enteredPassword == $validPassword) {
+
+    if ($enteredEmail == $validUser && $enteredPassword == $validPassword) {
         $_SESSION['loggedin'] = true;
-        $_SESSION["Session_Email"] = $enteredEmail;
+        $_SESSION["Session_User"] = $enteredUser;
         $_SESSION["Session_Password"] = $enteredPassword;
         $loginSuccess = true;
 
         header("Location: index.php");
     } else {
         $_SESSION['loggedin'] = false;
-        if ($enteredEmail !== $validEmail) $errors["formEmail"] = true;
+        if ($enteredUser !== $validUser) $errors["formUser"] = true;
         if ($enteredPassword !== $validPassword) $errors["formPassword"] = true;
     }
 }
@@ -64,7 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class="card-body p-4 p-md-5">
-
                             <?php if ($loginSuccess): ?>
                                 <div class="progress">
                                     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
@@ -79,19 +83,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <h2 class="fw-bold mb-3 mx-auto text-center">Login</h2>
                                 <form action="" method="POST">
                                     <div class="form-floating mb-3">
-                                        <input type="email"
+                                        <input type="text"
                                             class="form-control 
-                                    <?php echo $errors['formEmail'] ? 'is-invalid' : ($enteredEmail ? 'is-valid' : ''); ?>"
-                                            id="floatingEmail"
+                                    <?php echo $errors['formUser'] ? 'is-invalid' : ($enteredUser ? 'is-valid' : ''); ?>"
+                                            id="floatingUser"
                                             placeholder="name@example.com"
                                             name="formEmail"
-                                            value="<?php if (isset($enteredEmail)) echo $enteredEmail; ?>"
+                                            value="<?php if (isset($enteredUser)) echo $enteredUser; ?>"
                                             required>
 
-                                        <label for="floatingEmail">Email Adresse</label>
+                                        <label for="floatingUser">Username</label>
 
                                         <?php if ($errors["formEmail"]): ?>
-                                            <div class="invalid-feedback">Ungültige E-Mail-Adresse.</div>
+                                            <div class="invalid-feedback">Ungültiger Username.</div>
                                         <?php endif; ?>
                                     </div>
 
