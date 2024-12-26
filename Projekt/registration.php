@@ -2,6 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
+
 include './inc/functions.php';
 include("./inc/dbconnection.php");
 
@@ -21,17 +22,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $passwordRepeat = sanitize_input($_POST['formPasswordSecond']);
 
   //based on this article: https://en.wikipedia.org/wiki/ISO/IEC_5218
-  switch($gender){ 
-    case "male": 
-      $gender = 1; 
-      break;
-    case "female": 
-      $gender = 2; 
-      break;
-    case "other": 
-      $gender = 0; 
-      break;
-  }  
+  if(isset($gender)){
+    switch($gender){ 
+        case "male": 
+            $gender = 1; 
+            break;
+        case "female": 
+            $gender = 2; 
+            break;
+        case "other":
+            $gender = 0;
+            break;
+        default:
+            $gender = null;
+    }} else {
+        $gender = null;
+    }
 
   //Flags
   $firstnameError = false;
@@ -45,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   //Überprüfungen
   if (
-    empty($firstname) || empty($lastName) || empty($birthday) || empty($gender) ||
+    empty($firstname) || empty($lastName) || empty($birthday) || $gender == null ||
     empty($email) || empty($Username) || empty($password) || empty($passwordRepeat)
   ) {
     $emptyForm = true;
@@ -70,30 +76,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errors[] = "Ungültige E-Mail-Adresse.";
   }
 
-
   if (strlen($Username) < 3) {
     $usernameError = true;
     $errors[] = "Der Benutzername muss mindestens 3 Zeichen lang sein.";
   }
-  else{
-    $stmt = $conn->prepare("SELECT * FROM User WHERE Username = ?");
-    $stmt->bind_param("s", $Username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if($result->num_rows > 0){
-      $errors[] = "Der Benutzername ist bereits vergeben.";
-      $UsernameError = true;
-    }
-    else{
-      echo "Username ist verfügbar!";
-    }
-  }
   
+  $stmt = $conn->prepare("SELECT * FROM User WHERE Username = ?");
+  $stmt->bind_param("s", $Username);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if($result->num_rows > 0){
+    $errors[] = "Der Benutzername ist bereits vergeben.";
+    $UsernameError = true;
+  }
+  else{
+    echo "Username ist verfügbar!";
+  }
+ 
+  var_dump($errors);
   if (empty($errors)) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $birthDateFormatted = "2024-11-24";
+    var_dump($birthday);
     $roleID = 2;
-    $gender = 1;
     $status = "User";
 
     $preparedInsertStatemant = "INSERT INTO User (Username, Email, password_hash, Role_ID, Firstname, Lastname, Birthday, Gender, status_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -103,21 +108,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Fehler bei der Vorbereitung der Abfrage: " . $conn->error);
     }
 
-    $stmt->bind_param("sssisssis", $Username, $email, $hashedPassword,$roleID,$firstname,$lastName, $birthDateFormatted,  $gender, $status);
+    $stmt->bind_param("sssisssis", $Username, $email, $hashedPassword, $roleID, $firstname, $lastName, $birthday, $gender, $status);
 
     if ($stmt->execute()) {
-        echo "Erfolgreich angelegt"; // !!!redirect einfügen!!!
+        $execution = true;
+        $_SESSION["loggedin"] = true;
+        $_SESSION["username"] = $Username;
     } else {
+        $execution = false;
         die("Fehler beim Anlegen: " . $stmt->error);
     }
     $stmt->close();
     } else {
       echo "Fehler!";
     }
-      
-  }
-   
-?>
+  } 
+  ?>
 
 <!DOCTYPE html>
 <html lang="de">
@@ -126,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <title>S</title>
+  <title>Sign-Up</title>
   <style>
     .background {
       background-image: url(./Pictures/pexels-pixabay-258154.jpg);
@@ -242,7 +248,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <div class="">
-                  <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Sign-Up</button>
+                  <button id="SignUp" class="btn btn-primary btn-lg btn-block w-100" data-bs-toggle="modal" data-bs-target="#execModal" type="submit">Sign-Up</button>
                 </div>
                 <?php if (isset($emptyForm) && $emptyForm) : ?>
                   <p class="m-3 mx-auto text-center text-danger">Das Formular ist unvollständig</p>
@@ -258,10 +264,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </section>
-</body>
-<?php include './inc/footer.php'; ?>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
 
+        <div class="modal-body">
+          Sie haben sich erfolgreich registriert!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      <?php if (isset($execution) && $execution === true): ?>
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+        setTimeout(function() {
+        window.location.href = 'index.php';
+      }, 1000);
+      <?php endif; ?>
+    });
+</script>
+</body>
+
+<script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+      integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+      crossorigin="anonymous"
+    ></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="./app.js"></script>
 </html>
