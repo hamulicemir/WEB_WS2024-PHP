@@ -14,12 +14,7 @@ session_start();
       <li><a href="./FAQ.php" class="nav-link px-2">FAQs</a></li>
       <li><a href="./impressum.php" class="nav-link px-2">Impressum</a></li>
     </ul>
-    <?php if (!isset($_SESSION["loggedin"]) || !$_SESSION["loggedin"]) : ?>
-      <div class="col-md-3 text-end">
-        <a href="./login.php"><button type="button" class="btn btn-outline-primary me-2">Login</button></a>
-        <a href="./registration.php"><button type="button" class="btn btn-primary">Sign-Up</button></a>
-      </div>
-    <?php else : ?>
+    <?php if ((isset(($_SESSION["loggedin"]))) && ($_SESSION["loggedin"])) : ?>
       <div class="col-md-3 text-end mr-auto d-flex align-items-center">
         <a href="./reservation.php"><button type="button" class="btn btn-primary me-3">Neue Reservierung</button></a>
         <div class="dropdown">
@@ -36,6 +31,11 @@ session_start();
             <li><a class="dropdown-item" href="./logout.php">Sign out</a></li>
           </ul>
         </div>
+      </div>
+    <?php else : ?>
+      <div class="col-md-3 text-end">
+        <a href="./login.php"><button type="button" class="btn btn-outline-primary me-2">Login</button></a>
+        <a href="./registration.php"><button type="button" class="btn btn-primary">Sign-Up</button></a>
       </div>
     <?php endif; ?>
   </header>
