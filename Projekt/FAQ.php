@@ -7,12 +7,22 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    
     <link href="faq.stylesheet.css" rel="stylesheet"/> 
     <title>Hilfe & FAQs - Sonnenschuss</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1;
+        }
+    </style>
 </head>
 <body>
     <?php include './inc/nav.php';?>
-    <div class="container mt-5">
+    <main class="container mt-5">
         <h1 class="mb-4 text-center">Hilfe & FAQs</h1>
-        <div class="accordion accordion-flush border border-dark id="accordionFlushFAQs">
+        <div class="accordion accordion-flush border border-dark" id="accordionFlushFAQs">
             <div class="accordion-item">
                 <h2 class="accordion-header" id="flush-headingOne">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
@@ -132,7 +142,8 @@
                 </div>
             </div>
         </div>
-
-    </div>
+    </main>
+    <?php include './inc/footer.php'; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+3oB7j1o5y5r1b7+AMvyTG2x1p5r" crossorigin="anonymous"></script>
 </body>
 </html>
