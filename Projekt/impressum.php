@@ -33,6 +33,6 @@
                 <p id="Beschwerde">Verbraucher haben die Möglichkeit, Beschwerden an die Online-Streitbeilegungsplattform der EU zu richten: <a href="http://ec.europa.eu/odr">http://ec.europa.eu/odr</a>. Sie können allfällige Beschwerden auch an die oben angegebene E-Mail-Adresse richten.</p>
             </div>
         </div>
-        
-    </body>
+    <?php include './inc/footer.php'; ?>
+</body>
 </html>
