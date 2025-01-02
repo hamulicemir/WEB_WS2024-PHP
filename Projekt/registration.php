@@ -81,19 +81,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errors[] = "Der Benutzername muss mindestens 3 Zeichen lang sein.";
   }
   
-  $stmt = $conn->prepare("SELECT * FROM User WHERE Username = ?");
-  $stmt->bind_param("s", $Username);
-  $stmt->execute();
-  $result = $stmt->get_result();
-  if($result->num_rows > 0){
+  $UsernameError = !UsernameAvailable($Username);
+  if ($UsernameError) {
     $errors[] = "Der Benutzername ist bereits vergeben.";
-    $UsernameError = true;
-  }
-  else{
-    echo "Username ist verfügbar!";
   }
  
-  var_dump($errors);
   if (empty($errors)) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $roleID = 2;
@@ -112,7 +104,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $execution = true;
         $_SESSION["loggedin"] = true;
         $_SESSION["username"] = $Username;
-    } else {
+
+        updateUserInformation($Username);
+      } else {
         $execution = false;
         die("Fehler beim Anlegen: " . $stmt->error);
     }
@@ -262,10 +256,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </section>
-  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal fade" id="ErrorModal" tabindex="-1" aria-labelledby="ErrorModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
 
+        <div class="modal-body">
+          Folgende Probleme sind aufgetreten: 
+          <?php
+            foreach ($errors as $error) {
+              echo "<li>" . sanitize_input($error) . "</li>";
+            }
+          ?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      <?php if (isset($errors) && !empty($errors)): ?>
+        var ErrorModal = new bootstrap.Modal(document.getElementById('ErrorModal'));
+        ErrorModal.show();
+      <?php endif; ?>
+    });
+  </script>
+
+
+
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
         <div class="modal-body">
           Sie haben sich erfolgreich registriert!
         </div>

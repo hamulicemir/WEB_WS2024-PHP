@@ -2,21 +2,24 @@
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
-    
+    include("./inc/dbconnection.php");
+    include './inc/functions.php';
+
     $errors = [];
     $errors["old_password"] = false;
     $errors["new_password"] = false;
     $errors["repeat_new_password"] = false;
     $errors["formPassword"] = false;
 
-
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $loggedin = $_SESSION['loggedin'];
-        $session_email = $_SESSION["Session_Email"];
-        $session_password = $_SESSION["Session_Password"];
-        include './inc/functions.php';
+
+        if(!$conn){
+            die("Datenbankverbindung fehlgeschlagen: " . mysqli_connect_error());
+        }
 
         if (empty($enteredOldPassword) || empty($enteredNewPassword) || empty($enteredRepeatNewPassword)) {
+            $formError = "Alle Felder müssen ausgefüllt sein.";
             $emptyForm = true;
         }
 
@@ -24,18 +27,27 @@
         $enteredNewPassword = sanitize_input($_POST["NewPassword"]);
         $enteredRepeatNewPassword = sanitize_input($_POST["RepeatNewPassword"]);
 
-        if(!validate_Repeat_Password($session_password, $enteredOldPassword)){
-            $errors["old_password"] = true;
-        }
+        $hashedPassword = $_SESSION["UserInformation"]["password_hash"];
 
-        if(!validate_Repeat_Password($enteredNewPassword, $enteredRepeatNewPassword)){
+        if (!password_verify($enteredOldPassword, $hashedPassword)) {
+            $errors["old_password"] = true;
+        } elseif ($enteredNewPassword !== $enteredRepeatNewPassword) {
             $errors["repeat_new_password"] = true;
+        } else {
+            $newHashedPassword = password_hash($enteredNewPassword, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("UPDATE User SET password_hash = ? WHERE Username = ?");
+            $stmt->bind_param("ss", $newHashedPassword, $_SESSION["UserInformation"]["Username"]);
+
+            if ($stmt->execute()) {
+                $success = true;
+                updateUserInformation($_SESSION["UserInformation"]["Username"]);
+            } else {
+                echo("Fehler beim Aktualisieren des Passworts: " . $stmt->error);
+                $success = false;
+            }
+            $stmt->close();
         }
         
-        if (empty($errors)) {
-            // Falls alles korrekt ist, weitere Verarbeitung (z.B. Speichern der Daten)
-            // Hier könnte die Speicherung in einer Datenbank folgen   
-        }
     }
 ?>
 <!DOCTYPE html>
@@ -68,7 +80,7 @@
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class="card-body p-4 p-md-5">
-                            <?php if ($_SESSION['loggedin']) : ?>
+                            <?php if (isset($_SESSION['loggedin']) && ($_SESSION['loggedin'])) : ?>
                                 <h2 class="fw-bold mb-3 mx-auto text-center">Change Password</h2>
                                 <form action="" method="POST">
                                     <div class="form-floating mb-3">
@@ -119,13 +131,35 @@
                                     <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Change Password</button>
                                 </form>
                             <?php else : ?>
-                                <h2 class="fw-bold mx-auto text-center mt-3">You have to log in first!</h2>
+                                <?php header("Location: login.php"); ?>
                             <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
     </section>
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-body">
+          Sie haben sich erfolgreich das Password geändert!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      <?php if (isset($success) && $success === true): ?>
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+        setTimeout(function() {
+        window.location.href = 'index.php';
+      }, 1000);
+      <?php endif; ?>
+    });
+</script>
     <?php include './inc/footer.php'; ?>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

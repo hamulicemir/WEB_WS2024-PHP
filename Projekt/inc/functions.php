@@ -74,5 +74,25 @@ function createThumbnail($srcPath, $destPath, $width, $height): bool
     return true;
 }
 
+function updateUserInformation($Username){
+    global $conn;
+    $stmt = $conn->prepare("SELECT * FROM User WHERE Username = ?");
+    $stmt->bind_param("s", $Username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $_SESSION["UserInformation"] = $user;
+    $stmt->close();
+}
+
+function UsernameAvailable($Username){
+    global $conn;
+    $stmt = $conn->prepare("SELECT * FROM User WHERE Username = ?");
+    $stmt->bind_param("s", $Username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();
+    return $result->num_rows === 0;
+}
 
 ?>

@@ -1,34 +1,24 @@
 <?php
-session_start();
-
-// Überprüfen, ob der Benutzer eingeloggt ist (wird später schöner gemacht)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include './inc/dbconnection.php';
+include './inc/functions.php';
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    echo "Bitte loggen Sie sich ein, um Ihre Reservierungen zu sehen.";
-    echo '<br><a href="login.php" class="btn btn-primary mt-3">Login</a>';
-    exit;
+   header('Location: login.php');
 }
 
+if(!$conn){ die("Database Connection Failed: " . mysqli_connect_error());  }
+   
+
 // Statische Reservierungsdaten als Platzhalter, später durch Datenbank ersetzt
-$reservations = [
-    [
-        'id' => 1,
-        'checkin' => '2024-12-01',
-        'checkout' => '2024-12-05',
-        'status' => 'bestätigt',
-        'breakfast' => true,
-        'parking' => false,
-        'pets' => true
-    ],
-    [
-        'id' => 2,
-        'checkin' => '2024-12-10',
-        'checkout' => '2024-12-15',
-        'status' => 'storniert',
-        'breakfast' => false,
-        'parking' => true,
-        'pets' => false
-    ]
-];
+$stmt = $conn->prepare("SELECT * FROM Reservation WHERE User_ID = ?");
+$stmt->bind_param("s", $_SESSION['UserInformation']['User_ID']);
+$stmt->execute();
+$result = $stmt->get_result();
+$reservations = $result->fetch_all(MYSQLI_ASSOC);
+$stmt->close();
+$_SESSION["ReservationInformation"] = $reservations;
 ?>
 <!DOCTYPE html>
 <html lang="de">
@@ -51,8 +41,8 @@ $reservations = [
         <div class="col-12 col-lg-9 col-xl-7">
             <div class="card shadow-2-strong rounded-corners">
                 <div class="card-body p-4 p-md-2">
-                    <h1 class="mt-1 text-center">Ihre Reservierungen</h1>
-                    <hr class="hr" />
+                    <h1 class="mt-1 text-center">Your Reservations</h1>
+                    <hr class="hr"/>
                     <div class="table-responsive">
                         <table class="table table-striped mt-3">
                             <thead>
@@ -61,23 +51,29 @@ $reservations = [
                                     <th class="col">Check-in</th>
                                     <th class="col">Check-out</th>
                                     <th class="col">Status</th>
-                                    <th class="col">Frühstück</th>
-                                    <th class="col">Parken</th>
-                                    <th class="col">Haustiere</th>
+                                    <th class="col">Breakfast</th>
+                                    <th class="col">Parking</th>
+                                    <th class="col">Pets</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($reservations as $reservation) : ?>
+                                <?php if (!empty($reservations)) : ?>
+                                    <?php foreach ($reservations as $reservation) : ?>
+                                        <tr>
+                                            <td><?php echo $reservation['Reservation_ID']; ?></td>
+                                            <td class="fw-bold"><?php echo $reservation['Start_Date']; ?></td>
+                                            <td class="fw-bold"><?php echo $reservation['End_Date']; ?></td>
+                                            <td><?php echo ucfirst($reservation['Status']); ?></td>
+                                            <td><?php echo $reservation['Breakfast'] ? 'Ja' : 'Nein'; ?></td>
+                                            <td><?php echo $reservation['Parking'] ? 'Ja' : 'Nein'; ?></td>
+                                            <td><?php echo $reservation['Pets'] ? 'Ja' : 'Nein'; ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
                                     <tr>
-                                        <td><?php echo $reservation['id']; ?></td>
-                                        <td><?php echo $reservation['checkin']; ?></td>
-                                        <td><?php echo $reservation['checkout']; ?></td>
-                                        <td><?php echo ucfirst($reservation['status']); ?></td>
-                                        <td><?php echo $reservation['breakfast'] ? 'Ja' : 'Nein'; ?></td>
-                                        <td><?php echo $reservation['parking'] ? 'Ja' : 'Nein'; ?></td>
-                                        <td><?php echo $reservation['pets'] ? 'Ja' : 'Nein'; ?></td>
+                                        <td colspan="7" class="text-center">No reservations found.</td>
                                     </tr>
-                                <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>                        

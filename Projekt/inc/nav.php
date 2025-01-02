@@ -14,11 +14,11 @@ if (session_status() === PHP_SESSION_NONE) {
       <li><a href="./news.php" class="nav-link px-2">News</a></li>
       <li><a href="./pictures.php" class="nav-link px-2">Pictures</a></li>
       <li><a href="./FAQ.php" class="nav-link px-2">FAQs</a></li>
-      <li><a href="./impressum.php" class="nav-link px-2">Impressum</a></li>
+      <li><a href="./impressum.php" class="nav-link px-2">Imprint</a></li>
     </ul>
     <?php if ((isset(($_SESSION["loggedin"]))) && ($_SESSION["loggedin"])) : ?>
       <div class="col-md-3 text-end mr-auto d-flex align-items-center">
-        <a href="./reservation.php"><button type="button" class="btn btn-primary me-3">Neue Reservierung</button></a>
+        <a href="./reservation.php"><button type="button" class="btn btn-primary me-3">New Reservation</button></a>
         <div class="dropdown">
           <a href="" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
             <!-- Insert Dropdown button with bootstrap-->

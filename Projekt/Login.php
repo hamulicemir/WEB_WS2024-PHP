@@ -31,6 +31,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($enteredPassword, $hashedPassword)) {
             $_SESSION['loggedin'] = true;
             $_SESSION["Session_User"] = $enteredUser;
+            
+            updateUserInformation($enteredUser);
 
             header("Location: index.php");
             exit();
@@ -43,6 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['loggedin'] = false;
     }
     $stmt->close();
+    
 }
 ?>
 
@@ -121,7 +124,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                             <div class="invalid-feedback">Falsches Passwort.</div>
                                         <?php endif; ?>
                                     </div>
-                                    <p class="small mt-2"><a class="text-black" href="#!">Passwort vergessen?</a></p>
                                     <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Login</button>
                                 </form>
                             <?php else : ?>

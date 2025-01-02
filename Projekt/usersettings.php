@@ -1,5 +1,57 @@
 <?php 
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+      session_start();
+    } 
+    include("./inc/functions.php");
+    include("./inc/dbconnection.php");
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      $newFirstname = sanitize_input($_POST["formFirstname"]);
+      $newLastname = sanitize_input($_POST["formLastname"]);
+      $newBirthday = sanitize_input($_POST["formBirthdate"]);
+      $newEmail = sanitize_input($_POST["formEMail"]);
+      $newUsername = sanitize_input($_POST["formUsername"]);
+  
+      $currentUser = $_SESSION['UserInformation'];
+      $updates = [];
+  
+      if ($newFirstname !== $currentUser['Firstname']) {
+          $updates['Firstname'] = $newFirstname;
+      }
+      if ($newLastname !== $currentUser['Lastname']) {
+          $updates['Lastname'] = $newLastname;
+      }
+      if ($newBirthday !== $currentUser['Birthday']) {
+          $updates['Birthday'] = $newBirthday;
+      }
+      if ($newEmail !== $currentUser['Email']) {
+          $updates['Email'] = $newEmail;
+      }
+      if ($newUsername !== $currentUser['Username']) {
+        if (UsernameAvailable($newUsername)) {
+            $updates['Username'] = $newUsername;
+        }
+        else{
+            $errors[] = 'Username bereits vergeben. Bitte wählen Sie einen anderen.'; 
+        }
+      }
+
+      if (!empty($updates)) {
+        foreach ($updates as $column => $value) {
+            $stmt = $conn->prepare("UPDATE User SET $column = ? WHERE Username = ?");
+            $stmt->bind_param('ss', $value, $currentUser['Username']);
+            $stmt->execute();
+            $stmt->close();
+        }
+        updateUserInformation($newUsername);
+        $updated = true;
+    } else {
+        $updated = false;
+    }
+  
+
+    }
+
     //function für DB Acess und reset funktion sowie update funktion
 ?>
 <!DOCTYPE html>
@@ -46,30 +98,54 @@
         <div class="tab-pane active" id="account">
           <h6>YOUR ACCOUNT SETTINGS</h6>
           <hr>
-          <form> <!-- Form muss noch vervollständigt werden-->
+          <form action="usersettings.php" method="POST">
             <div class="form-floating mb-3">
-              <input type="text" required class="form-control form-control-lg" id="firstname" placeholder="firstname" value=""> <!-- Hier Daten aus Datenbank einfügen -->
+              <input type="text" required class="form-control form-control-lg" id="firstname" placeholder="firstname" name="formFirstname" value="<?php echo($_SESSION['UserInformation']['Firstname']); ?>">
               <label for="firstname">First Name</label>
             </div>
             <div class="form-floating mb-3">
-              <input type="text" class="form-control form-control-lg" id="lastname" placeholder="lastname" value=""> <!-- Hier Daten aus Datenbank einfügen -->
+              <input type="text" class="form-control form-control-lg" id="lastname" placeholder="lastname" name="formLastname" value="<?php echo($_SESSION['UserInformation']['Lastname']); ?>"> <!-- Hier Daten aus Datenbank einfügen -->
               <label for="lastname">Last Name</label>
             </div>
             <div class="form-floating mb-3 datepicker w-100">
-                      <input type="date" id="birthdayDate" required class="form-control form-control-lg" placeholder="first name" name="formBirthdate" value="" /> <!-- Hier Daten aus Datenbank einfügen -->
+                      <input type="date" id="birthdayDate" required class="form-control form-control-lg" placeholder="first name" name="formBirthdate" value="<?php echo($_SESSION['UserInformation']['Birthday']); ?>" /> <!-- Hier Daten aus Datenbank einfügen -->
                       <label for="birthdayDate">Birthday</label>
             </div>
             <div class="form-floating mb-3">
-                      <input type="email" id="emailAddress" required class="form-control form-control-lg" value=""/> <!-- Hier Daten aus Datenbank einfügen -->
+                      <input type="email" id="emailAddress" required class="form-control form-control-lg" name="formEMail" value="<?php echo($_SESSION['UserInformation']['Email']); ?>"/> <!-- Hier Daten aus Datenbank einfügen -->
                       <label class="form-label" for="emailAddress">E-Mail</label>
             </div>
             <div class="form-floating mb-3">
-                      <input type="text" id="username" required class="form-control form-control-lg" placeholder="Username" name="formUsername" autocomplete="off" value="" /> <!-- Hier Daten aus Datenbank einfügen -->
+                      <input type="text" id="username" required class="form-control form-control-lg" placeholder="Username" name="formUsername" autocomplete="off" value="<?php echo($_SESSION['UserInformation']['Username']); ?>" /> <!-- Hier Daten aus Datenbank einfügen -->
                       <label for="username">Username</label>
                     </div>
 
-            <button type="button" class="btn btn-primary">Update Profile</button>
-            <?php //hier Modal einbauen & nachfragen ob Settings gesaved werden sollen?>
+            <button type="button" id="UpdateProfileButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkModal">Update Profile</button>
+            
+            <div class="modal fade" id="checkModal" tabindex="-1" aria-labelledby="checkModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Save Changes?</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                  <div class="modal-body">
+                    Do you want to save the changes?
+                  </div>
+                  <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" id="SaveChangesButton" class="btn btn-primary">Save Changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+            <script>
+              var myModal = document.getElementById('checkModal')
+              var myInput = document.getElementById('UpdateProfileButton')
+              myModal.addEventListener('shown.bs.modal', function () {
+                myInput.focus()
+              })
+            </script>
 
             <button type="reset" class="btn btn-light">Reset Changes</button>
             <hr>
@@ -92,7 +168,7 @@
         <div class="tab-pane" id="notification">
           <h6>NOTIFICATION SETTINGS</h6>
           <hr>
-          <form> <!-- Form muss noch vervollständigt werden-->
+          <form>
             <div class="form-group">
               <label class="d-block mb-1">Alerts</label>
               <div class="custom-control custom-checkbox">
@@ -133,6 +209,54 @@
   </div>
 </div>
 </div>
+
+<div class="modal fade" id="ErrorUserSettingsModal" tabindex="-1" aria-labelledby="ErrorUserSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          Folgende Probleme sind aufgetreten: 
+          <?php
+            foreach ($errors as $error) {
+              echo "<li>" . sanitize_input($error) . "</li>";
+            }
+          ?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+        <?php if (isset($error) && !empty($error)): ?>
+          var successModal = new bootstrap.Modal(document.getElementById('ErrorUserSettingsModal'));
+          successModal.show();
+        <?php endif; ?>
+      });
+</script>
+
+
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+      <div class="modal-content">
+        <div class="modal-body">
+          Sie haben die Daten erfolgreich aktualisert!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      <?php if (isset($updated) && $updated === true): ?>
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+        setTimeout(function() {
+          successModal.hide();
+        }, 1500);
+      <?php endif; ?>
+    });
+</script>
+
 <?php include './inc/footer.php'; ?>
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.bundle.min.js"></script> <!--SEHR WICHTIG SONST SCHALTET NICHT -->
