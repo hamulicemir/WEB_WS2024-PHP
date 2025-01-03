@@ -96,7 +96,7 @@
 
                                         <label for="floatingOldPassword">Old Password</label>
                                         <?php if ($errors["formPassword"]): ?>
-                                            <div class="invalid-feedback">Falsches Passwort.</div>
+                                            <div class="invalid-feedback">Invalid Password.</div>
                                         <?php endif; ?>
                                     </div>
 
@@ -125,7 +125,7 @@
 
                                         <label for="floatingRepeatNewPassword">Repeat New Password</label>
                                         <?php if ( $errors["repeat_new_password"]): ?>
-                                            <div class="invalid-feedback">Falsches Passwort.</div>
+                                            <div class="invalid-feedback">Invalid Password.</div>
                                         <?php endif; ?>
                                     </div>
                                     <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Change Password</button>
@@ -143,7 +143,7 @@
       <div class="modal-content">
 
         <div class="modal-body">
-          Sie haben sich erfolgreich das Password geändert!
+        You have successfully changed the password!
         </div>
       </div>
     </div>

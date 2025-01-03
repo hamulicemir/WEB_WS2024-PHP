@@ -250,7 +250,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body">
-          Folgende Probleme sind aufgetreten: 
+        The following issues have occurred: 
           <?php
             foreach ($errors as $error) {
               echo "<li>" . sanitize_input($error) . "</li>";
@@ -275,7 +275,7 @@
     <div class="modal-dialog ">
       <div class="modal-content">
         <div class="modal-body">
-          Sie haben die Daten erfolgreich aktualisert!
+        You have successfully updated the data!
         </div>
       </div>
     </div>

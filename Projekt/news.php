@@ -21,7 +21,7 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
     <main class="container my-5">
         <div class="row">
             <div class="col-8 mb-4">
-                <h2 class="mb-4">Neueste Beiträge</h2>
+                <h2 class="mb-4">Latest Posts</h2>
             </div>
             <?php
             if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && $_SESSION['UserInformation']['Role_ID'] === 1) :

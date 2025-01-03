@@ -184,7 +184,7 @@ if ($user_id > 0) {
       <div class="modal-dialog ">
         <div class="modal-content">
           <div class="modal-body">
-            Sie haben die Daten erfolgreich aktualisert!
+          You have successfully updated the data!
           </div>
         </div>
       </div>

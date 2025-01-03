@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <label for="floatingUser">Username</label>
 
                                         <?php if ($errors["formUser"]): ?>
-                                            <div class="invalid-feedback">Ungültiger Username.</div>
+                                            <div class="invalid-feedback">Invalid Username.</div>
                                         <?php endif; ?>
                                     </div>
 
@@ -105,11 +105,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                         <label for="floatingPassword">Passwort</label>
                                         <?php if ($errors["formPassword"]): ?>
-                                            <div class="invalid-feedback">Falsches Passwort.</div>
+                                            <div class="invalid-feedback">Invalid Passwort.</div>
                                         <?php endif; ?>
 
                                         <?php if ($errors["formUser"]): ?>
-                                            <div class="invalid-feedback">Ungültiger Username.</div>
+                                            <div class="invalid-feedback">Invalid Username.</div>
                                         <?php endif; ?>
 
                                         <?php
@@ -133,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
-                    Willkommen zurück <?php echo $_SESSION["UserInformation"]["Username"]; ?>!
+                    Welcome back <?php echo $_SESSION["UserInformation"]["Username"]; ?>!
                 </div>
             </div>
         </div>

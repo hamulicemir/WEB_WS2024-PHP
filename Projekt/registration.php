@@ -234,18 +234,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                       <label for="passwordsecond">Repeat Password</label>
                     </div>
                   </div>
-                  <p class="small"><a class="text-black" href="./Login.php">Bereits registriert?</a></p>
+                  <p class="small"><a class="text-black" href="./Login.php">Already registered?</a></p>
                 </div>
 
                 <div class="">
                   <button id="SignUp" class="btn btn-primary btn-lg btn-block w-100" data-bs-toggle="modal" data-bs-target="#execModal" type="submit">Sign-Up</button>
                 </div>
                 <?php if (isset($emptyForm) && $emptyForm) : ?>
-                  <p class="m-3 mx-auto text-center text-danger">Das Formular ist unvollständig</p>
+                  <p class="m-3 mx-auto text-center text-danger">The form is incomplete.</p>
                 <?php endif; ?>
 
                 <?php if (isset($passwordDoesNotMatch) && $passwordDoesNotMatch) : ?>
-                  <p class="m-3 mx-auto text-center text-danger">Das Password ist nicht gleich.</p>
+                  <p class="m-3 mx-auto text-center text-danger">The passwords do not match.</p>
                 <?php endif; ?>
               </form>
             </div>
@@ -259,7 +259,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="modal-content">
 
         <div class="modal-body">
-          Folgende Probleme sind aufgetreten: 
+        The following issues have occurred:
           <?php
             foreach ($errors as $error) {
               echo "<li>" . sanitize_input($error) . "</li>";
@@ -285,7 +285,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body">
-          Sie haben sich erfolgreich registriert!
+        You have successfully registered!
         </div>
       </div>
     </div>
