@@ -185,9 +185,16 @@
           <form>
             <div class="form-group">
               <label class="d-block .text-black mb-1">View Users</label>
-              <p class="text-muted font-size-sm">Here you can see alls registered users.</p>
+              <p class="text-muted font-size-sm">Here you can see all registered users.</p>
             </div>
             <button class="btn btn-primary" onclick="window.location.href='./userlist.php'" type="button">View Users</button>
+            <hr>
+            <div class="form-group">
+              <label class="d-block .text-black mb-1">View Reservations</label>
+              <p class="text-muted font-size-sm">Here you can see all Reservation.</p>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='./reservationlist.php'" type="button">View Reservations</button>
+
           </form>
         </div>
         <?php endif; ?>
