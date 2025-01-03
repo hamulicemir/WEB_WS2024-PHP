@@ -1,11 +1,12 @@
 <?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">    
-    <link href="faq.stylesheet.css" rel="stylesheet"/> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="faq.stylesheet.css" rel="stylesheet" />
     <title>FAQ</title>
     <style>
         body {
@@ -13,13 +14,15 @@
             flex-direction: column;
             min-height: 100vh;
         }
+
         main {
             flex: 1;
         }
     </style>
 </head>
+
 <body>
-    <?php include './inc/nav.php';?>
+    <?php include './inc/nav.php'; ?>
     <main class="container mt-5">
         <h1 class="mb-4 text-center">FAQ</h1>
         <div class="accordion accordion-flush border border-dark" id="accordionFlushFAQs">
@@ -28,7 +31,7 @@
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
                         1. How do I sign up?
                     </button>
-                </h2>       
+                </h2>
                 <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushFAQs">
                     <div class="accordion-body">
                         Click on "Login" and enter your username and password. If the credentials are correct, you will be redirected to the homepage and see a welcome message.
@@ -70,9 +73,9 @@
                 </h2>
                 <div id="flush-collapseFour" class="accordion-collapse collapse" aria-labelledby="flush-headingFour" data-bs-parent="#accordionFlushFAQs">
                     <div class="accordion-body">
-                        In addition to the room, you can optionally add breakfast, a parking space, and pet accommodation. These options come with an additional fee, which you can view during the reservation process.                    </div>
-                    </div>
+                        In addition to the room, you can optionally add breakfast, a parking space, and pet accommodation. These options come with an additional fee, which you can view during the reservation process. </div>
                 </div>
+            </div>
 
             <div class="accordion-item">
                 <h2 class="accordion-header" id="flush-headingFive">
@@ -95,7 +98,7 @@
                 </h2>
                 <div id="flush-collapseSix" class="accordion-collapse collapse" aria-labelledby="flush-headingSix" data-bs-parent="#accordionFlushFAQs">
                     <div class="accordion-body">
-                        Alle Benutzer, auch anonyme Gäste, können die News-Beiträge der Administratoren sehen.
+                        All users, including anonymous guests, can view the news posts from the administrators.
                     </div>
                 </div>
             </div>
@@ -145,4 +148,5 @@
     <?php include './inc/footer.php'; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+3oB7j1o5y5r1b7+AMvyTG2x1p5r" crossorigin="anonymous"></script>
 </body>
+
 </html>
