@@ -9,7 +9,6 @@ include("./inc/dbconnection.php");
 $errors = [];
 $errors["formUser"] = false;
 $errors["formPassword"] = false;
-$loginSuccess = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if(!$conn){
@@ -31,11 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($enteredPassword, $hashedPassword)) {
             $_SESSION['loggedin'] = true;
             $_SESSION["Session_User"] = $enteredUser;
-            
             updateUserInformation($enteredUser);
-
-            header("Location: index.php");
-            exit();
+            $success = true;
         }
         else {
             $_SESSION['loggedin'] = false;
@@ -45,7 +41,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['loggedin'] = false;
     }
     $stmt->close();
-    
 }
 ?>
 
@@ -80,17 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class="card-body p-4 p-md-5">
-                            <?php if ($loginSuccess): ?>
-                                <div class="progress">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-                                </div>
-                                <script>
-                                    setTimeout(function() {
-                                        window.location.href = "index.php";
-                                    }, 1000);
-                                </script>
-                            <?php endif; ?>
-                            <?php if (isset($_SESSION)) : ?>
+                            <?php if (!(isset($_SESSION['loggedin']) && ($_SESSION['loggedin']))) : ?>
                                 <h2 class="fw-bold mb-3 mx-auto text-center">Login</h2>
                                 <form action="" method="POST">
                                     <div class="form-floating mb-3">
@@ -127,13 +112,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Login</button>
                                 </form>
                             <?php else : ?>
-                                <h2 class="fw-bold mx-auto text-center mt-3">Welcome <?php //echo Username aus Datenbank ziehen statt User...?>User!</h2>
+                                <?php header("Location: index.php"); ?>
                             <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
     </section>
+
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+           Willkommen zurück <?php echo $_SESSION["UserInformation"]["Username"]; ?>!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      <?php if (isset($success) && $success === true): ?>
+        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        successModal.show();
+        setTimeout(function() {
+        window.location.href = 'index.php';
+      }, 1500);
+      <?php endif; ?>
+    });
+</script>
+</script>
     <?php include './inc/footer.php'; ?>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

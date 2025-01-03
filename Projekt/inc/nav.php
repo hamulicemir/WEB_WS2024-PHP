@@ -13,7 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
       <li><a href="./index.php" class="nav-link px-2">Home</a></li>
       <li><a href="./news.php" class="nav-link px-2">News</a></li>
       <li><a href="./pictures.php" class="nav-link px-2">Pictures</a></li>
-      <li><a href="./FAQ.php" class="nav-link px-2">FAQs</a></li>
+      <li><a href="./FAQ.php" class="nav-link px-2">FAQ</a></li>
       <li><a href="./impressum.php" class="nav-link px-2">Imprint</a></li>
     </ul>
     <?php if ((isset(($_SESSION["loggedin"]))) && ($_SESSION["loggedin"])) : ?>

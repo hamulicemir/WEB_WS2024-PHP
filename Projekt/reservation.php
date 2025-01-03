@@ -39,8 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Validierung des Datums
     if (strtotime($checkout) <= strtotime($checkin)) {
-        $error = "Das Abreisedatum muss nach dem Anreisedatum liegen.";
+        $error[] = "Das Abreisedatum muss nach dem Anreisedatum liegen.";
     } 
+    if (strtotime($checkin) < strtotime(date('Y-m-d'))) {
+        $error[] = "Das Anreisedatum muss in der Zukunft liegen.";
+    }
     
     if(empty($error)){
         $status = "Pending";
@@ -81,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong rounded-corners">
                         <div class="card-body p-4">
-                            <h1 class="mt-1 text-center">Zimmerreservierung</h1>
+                            <h1 class="mt-1 text-center">Room Reservation</h1>
 
                             <?php if (isset($errorMsg)): ?>
                                 <div class="alert alert-danger" role="alert">
@@ -95,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                 </div>
                             <?php endif; ?>
 
-                            <h4 class="mt-4">Neue Zimmerreservierung anlegen</h4>
+                            <h4 class="mt-4">New Room Reservation</h4>
                             <form method="post">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -147,6 +150,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </div>
         </div>
     </main>
+
+    <div class="modal fade" id="ErrorModal" tabindex="-1" aria-labelledby="ErrorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-body">
+          Folgende Probleme sind aufgetreten: 
+          <?php
+            foreach ($error as $err) {
+              echo "<li>" . sanitize_input($err) . "</li>";
+            }
+          ?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      <?php if (isset($error) && !empty($error)): ?>
+        var ErrorModal = new bootstrap.Modal(document.getElementById('ErrorModal'));
+        ErrorModal.show();
+      <?php endif; ?>
+    });
+  </script>
+
+
     <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">

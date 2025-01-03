@@ -24,7 +24,7 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
                 <h2 class="mb-4">Neueste Beiträge</h2>
             </div>
             <?php
-            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin']) : //Rechte abfrage später
+            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && $_SESSION['UserInformation']['Role_ID'] === 1) :
             ?>
                 <div class="col-4 mb-4 d-flex justify-content-end">
                     <a href="./news-form.php"><button type="button" class="btn btn-primary me-3">Neuer Beitrag</button></a>
