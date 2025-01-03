@@ -63,9 +63,9 @@ $result = $stmt->get_result();
                                         echo "<td class='align-middle'>" . htmlspecialchars($row['Birthday']) . "</td>";
                                         echo "<td class='align-middle'>" . htmlspecialchars($row['status_user']) . "</td>";
                                         echo "<td class='align-middle'>";
-                                        echo "<a href='user_data.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-primary m-1'>User Data</a>";
-                                        echo "<a href='reservation_data.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-primary m-1'>Reservation Data</a>";
-                                        echo "<a href='delete_user.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-danger m-1'>Delete Data</a>";
+                                        echo "<a href='user_management.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-primary m-1'>User Data</a>";
+                                        echo "<a href='reservation_management.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-primary m-1'>Reservation Data</a>";
+                                        echo "<a href='user_delete.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-danger m-1'>Delete Data</a>";
                                         echo "</td>";
                                         echo "</tr>";
                                     }
