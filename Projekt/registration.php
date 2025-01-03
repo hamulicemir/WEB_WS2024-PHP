@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (empty($errors)) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $roleID = 2;
-    $status = "User";
+    $status = "Aktiv";
 
     $preparedInsertStatemant = "INSERT INTO User (Username, Email, password_hash, Role_ID, Firstname, Lastname, Birthday, Gender, status_user) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($preparedInsertStatemant);
