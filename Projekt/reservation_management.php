@@ -48,14 +48,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $parking = isset($_POST["parking"]) ? 1 : 0;
   $pets = isset($_POST["pets"]) ? 1 : 0;
   $room = sanitize_input($_POST["room"]);
+  $roomNo = 1;
   switch ($room) {
-    case 1:
+    case "SingleBed":
       $roomNo = 1;
       break;
-    case 2:
+    case "TwoBed":
       $roomNo = 2;
       break;
-    case 3:
+    case "Suite":
       $roomNo = 3;
       break;
   }
@@ -219,7 +220,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         var successModal = new bootstrap.Modal(document.getElementById('successModal'));
         successModal.show();
         setTimeout(function () {
-          window.location.href = 'user_management.php?id=<?php echo $user_id ?>';
+          window.location.href = 'reservation_management.php?id=<?php echo $user_id ?>';
         }, 1500);
         <?php $AdminUpdated = false; // Reset ?>
       <?php endif; ?>
