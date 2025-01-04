@@ -1,5 +1,14 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+include './inc/functions.php';
+include("./inc/dbconnection.php");
+
+if (!$conn) {
+    die("Datenbankverbindung fehlgeschlagen: " . mysqli_connect_error());
+}
+
 $thumbnailsDir = './Pictures/Thumbnails-resized/';
 ?>
 
@@ -32,52 +41,70 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
             <?php endif; ?>
 
             <?php
-            $posts = [
-                [
-                    "title" => "Test",
-                    "text" => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                    "image" => './Pictures/Thumbnails-resized/Test.jpeg',
-                    "date" => "2024-11-23"
-                ],
-                [
-                    "title" => "2. Beitrag",
-                    "text" => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                    "image" => './Pictures/Thumbnails-resized/Test2.jpeg',
-                    "date" => "2024-11-22"
-                ],
-                [
-                    "title" => "3. Beitrag",
-                    "text" => "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
-                    "image" => './Pictures/Thumbnails-resized/Test3.jpeg',
-                    "date" => "2024-11-21"
-                ]
-            ];
-
-            foreach ($posts as $post) : ?>
+            $stmt = $conn->prepare("SELECT * FROM News ORDER BY Creation_Stamp DESC");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $stmt->close();
+            ?>
+            <?php while ($post = $result->fetch_assoc()) : ?>
                 <div class="col-12 mb-4">
                     <div class="card h-100">
-                        <?php if (!empty($post['image']) && file_exists($post['image'])) : ?>
-                            <img src="<?php echo $post['image']; ?>" class="card-img-top" alt="Thumbnail">
+                        <?php if (!empty($post['Image_Path']) && file_exists($post['Image_Path'])) : ?>
+                            <img src="<?php echo $post['Image_Path']; ?>" class="card-img-top" alt="Thumbnail">
                         <?php endif; ?>
                         <div class="card-body">
-                            <h2 class="card-title "><?php echo $post['title'] ?></h2>
-                            <p class="card-text"><?php echo $post['text'] ?></p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h2 class="card-title"><?php echo $post['Title'] ?></h2>
+                                <?php if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && $_SESSION['UserInformation']['Role_ID'] === 1) : ?>
+                                    <button class='btn btn-danger m-1' data-bs-toggle='modal' data-bs-target='#CheckDeleteModal' data-news-id=" <?php echo $post['News_ID']?>">Delete</button>
+                                <?php endif; ?>
+                            </div>
+                            <p class="card-text"><?php echo $post['Description'] ?></p>
                         </div>
                         <div class="card-footer">
-                            <small class="text-muted"><?php echo $post['date'] ?></small>
+                            <small class="text-muted"><?php echo $post['Creation_Stamp'] ?></small>
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
-            
+            <?php endwhile; ?>
         </div>
     </main>
-
-
+    <div class="modal fade" id="CheckDeleteModal" tabindex="-1" aria-labelledby="CheckDeleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete News?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to delete this News?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" id="confirmDeleteButton" class="btn btn-danger">Delete News</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('button[data-bs-toggle="modal"]').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    var newsID = this.getAttribute('data-news-id');
+                    document.getElementById('confirmDeleteButton').setAttribute('data-news-id', newsID);
+                });
+            });
+
+            document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+                var newsID = this.getAttribute('data-news-id');
+                window.location.href = 'news_delete.php?id=' + newsID;
+            });
+        });
+    </script>
+
     <?php include './inc/footer.php'; ?>
-    
-    
 </body>
 
 </html>
