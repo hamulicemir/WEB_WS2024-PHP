@@ -1,19 +1,21 @@
 <?php
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 include './inc/functions.php';
 include("./inc/dbconnection.php");
 
+if (!$conn) {
+    die("Datenbankverbindung fehlgeschlagen: " . mysqli_connect_error());
+}
 
 $errors = [];
 $errors["formUser"] = false;
 $errors["formPassword"] = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (!$conn) {
-        die("Datenbankverbindung fehlgeschlagen: " . mysqli_connect_error());
-    }
+
     $enteredUser = sanitize_input($_POST["formUser"]);
     $enteredPassword = sanitize_input($_POST["formPassword"]);
 
