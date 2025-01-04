@@ -193,7 +193,7 @@
               <label class="d-block .text-black mb-1">View Reservations</label>
               <p class="text-muted font-size-sm">Here you can see all Reservation.</p>
             </div>
-            <button class="btn btn-primary" onclick="window.location.href='./reservationlist.php'" type="button">View Reservations</button>
+            <button class="btn btn-primary" onclick="window.location.href='./reservationlist_all.php'" type="button">View Reservations</button>
 
           </form>
         </div>

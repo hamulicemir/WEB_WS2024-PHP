@@ -22,23 +22,18 @@ if (!$conn) {
 
 global $reservationdata;
 
-$user_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$reservation_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $errors = [];
 
-if ($user_id > 0) {
-  $stmt = $conn->prepare("SELECT * FROM Reservation WHERE User_ID = ?");
-  $stmt->bind_param("s", $user_id);
+if ($reservation_id > 0) {
+  $stmt = $conn->prepare("SELECT * FROM reservation WHERE Reservation_ID = ?");
+  $stmt->bind_param("i", $reservation_id);
   $stmt->execute();
   $result = $stmt->get_result();
   $reservationdata = $result->fetch_assoc();
   $stmt->close();
 
-  $stmt = $conn->prepare("SELECT * FROM User WHERE User_ID = ?");
-  $stmt->bind_param("s", $user_id);
-  $stmt->execute();
-  $result = $stmt->get_result();
-  $userdata = $result->fetch_assoc();
-  $stmt->close();
+
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -96,8 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   if (!empty($updates)) {
     foreach ($updates as $column => $value) {
-      $stmt = $conn->prepare("UPDATE Reservation SET $column = ? WHERE User_ID = ?");
-      $stmt->bind_param('ss', $value, $user_id);
+      $stmt = $conn->prepare("UPDATE Reservation SET $column = ? WHERE Reservation_ID = ?");
+      $stmt->bind_param('ss', $value, $reservation_id);
       $stmt->execute();
       $stmt->close();
     }
@@ -128,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <div class="card">
             <div class="card-body">
               <h1 class="text-center mb-4">Manage Reservations</h1>
-              <form action="reservation_management.php?id=<?php echo $user_id ?>" method="POST">
+              <form action="reservation_management.php?id=<?php echo $reservation_id ?>" method="POST">
                 <div class="form-floating mb-3">
                   <input type="date" class="form-control" id="checkin" name="checkin" value="<?php echo $reservationdata['Start_Date'] ?>" required>
                   <label for="checkin">Check-in Date</label>
@@ -220,7 +215,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         var successModal = new bootstrap.Modal(document.getElementById('successModal'));
         successModal.show();
         setTimeout(function () {
-          window.location.href = 'reservation_management.php?id=<?php echo $user_id ?>';
+          window.location.href = 'reservation_management.php?id=<?php echo $reservation_id ?>';
         }, 1500);
         <?php $AdminUpdated = false; // Reset ?>
       <?php endif; ?>

@@ -12,9 +12,15 @@ if (!$conn) {
     die("Database Connection Failed: " . mysqli_connect_error());
 }
 
-$stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username, Email, Birthday, status_user FROM User");
-$stmt->execute();
-$result = $stmt->get_result();
+$user_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+if ($user_id > 0) {
+    $stmt = $conn->prepare("SELECT * FROM Reservation WHERE User_ID = ?");
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    $resultReservationPerUser = $stmt->get_result();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +42,7 @@ $result = $stmt->get_result();
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title text-uppercase mb-0 text-center">Manage Users</h5>
+                        <h5 class="card-title text-uppercase mb-0 text-center">Manage Reservations</h5>
                         <hr>
                     </div>
                     <div class="table-responsive">
@@ -44,34 +50,48 @@ $result = $stmt->get_result();
                             <thead class="thead-dark">
                                 <tr>
                                     <th scope="col" class="border-0 text-uppercase font-medium pl-4 text-center">#</th>
-                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">First Name
-                                    </th>
-                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Last Name
+                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Name
                                     </th>
                                     <th scope="col" class="border-0 text-uppercase font-medium text-center">Username
                                     </th>
-                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Email</th>
-                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Birthday
+                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Start</th>
+                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">End
                                     </th>
                                     <th scope="col" class="border-0 text-uppercase font-medium text-center">Status</th>
-                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Manage</th>
+                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Breakfast</th>
+                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Parking</th>
+                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Pets</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                while ($row = $result->fetch_assoc()) {
+                                if($resultReservationPerUser->num_rows === 0) {
                                     echo "<tr class='text-center'>";
-                                    echo "<td class='align-middle fw-bold'>" . htmlspecialchars($row['User_ID']) . "</td>";
-                                    echo "<td class='align-middle fw-bold'>" . htmlspecialchars($row['Firstname']) . "</td>";
-                                    echo "<td class='align-middle fw-bold'>" . htmlspecialchars($row['Lastname']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Username']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Email']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Birthday']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['status_user']) . "</td>";
+                                    echo "<td colspan='9' class='align-middle fw-bold'>No reservations found</td>";
+                                    echo "</tr>";
+                                }
+                                while ($row = $resultReservationPerUser->fetch_assoc()) {
+                                    $stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username FROM User WHERE User_ID = ?");
+                                    $stmt->bind_param('i', $row['User_ID']);
+                                    $stmt->execute();
+                                    $resultUser = $stmt->get_result();
+                                    $resultUser = $resultUser->fetch_assoc();
+                                    $stmt->close();
+                                    echo "<tr class='text-center'>";
+                                    echo "<td class='align-middle fw-bold'>" . htmlspecialchars($row['Reservation_ID']) . "</td>";
+                                    echo "<td class='align-middle fw-bold'>" . htmlspecialchars($resultUser['Firstname']) . " " . htmlspecialchars($resultUser['Lastname'])  . "</td>";
+                                    echo "<td class='align-middle fw-bold'>" . htmlspecialchars($resultUser['Username']) . "</td>";
+                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Start_Date']) . "</td>";
+                                    echo "<td class='align-middle'>" . htmlspecialchars($row['End_Date']) . "</td>";
+                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Status']) . "</td>";
+                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Breakfast']) . "</td>";
+                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Parking']) . "</td>";
+                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Pets']) . "</td>";
+
                                     echo "<td class='align-middle'>";
-                                    echo "<a href='user_management.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-primary m-1'>User Data</a>";
-                                    echo "<a href='reservation_management_per_user.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-primary m-1'>Reservation Data</a>";
-                                    echo "<button class='btn btn-danger m-1' data-bs-toggle='modal' data-bs-target='#CheckDeleteModal' data-user-id='" . htmlspecialchars($row['User_ID']) . "'>Delete Data</button>";
+                                    echo "<a href='reservation_management.php?id=" . htmlspecialchars($row['Reservation_ID']) . "' class='btn btn-primary m-1'>Reservation Data</a>";
+                                    echo "<button class='btn btn-danger m-1' data-bs-toggle='modal' data-bs-target='#CheckDeleteModal' data-user-id='" . htmlspecialchars($row['Reservation_ID']) . "'>Delete Data</button>";
                                     echo "</td>";
                                     echo "</tr>";
                                 }
@@ -93,7 +113,7 @@ $result = $stmt->get_result();
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete this user?
+                    Are you sure you want to delete this Reservation?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
