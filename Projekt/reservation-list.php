@@ -54,6 +54,7 @@ $_SESSION["ReservationInformation"] = $reservations;
                                     <th class="col">Breakfast</th>
                                     <th class="col">Parking</th>
                                     <th class="col">Pets</th>
+                                    <th class="col">Manage</th>
                                 </tr>
                             </thead>
                             <tbody>

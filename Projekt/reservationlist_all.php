@@ -46,7 +46,7 @@ $stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username, Email, Bi
                     </div>
                     <div class="table-responsive">
                         <table class="table user-table mb-0 table-striped">
-                            <thead class="thead-dark">
+                            <thead>
                                 <tr>
                                     <th scope="col" class="border-0 text-uppercase font-medium pl-4 text-center">#</th>
                                     <th scope="col" class="border-0 text-uppercase font-medium text-center">Name
@@ -60,11 +60,14 @@ $stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username, Email, Bi
                                     <th scope="col" class="border-0 text-uppercase font-medium text-center">Breakfast</th>
                                     <th scope="col" class="border-0 text-uppercase font-medium text-center">Parking</th>
                                     <th scope="col" class="border-0 text-uppercase font-medium text-center">Pets</th>
-
+                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Manage</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
+                                if ($result->num_rows === 0) {
+                                    echo "<tr><td colspan='10' class='text-center'>No reservations found</td></tr>";
+                                }
                                 while ($row = $result->fetch_assoc()) {
                                     $stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username FROM User WHERE User_ID = ?");
                                     $stmt->bind_param('i', $row['User_ID']);
@@ -79,13 +82,12 @@ $stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username, Email, Bi
                                     echo "<td class='align-middle'>" . htmlspecialchars($row['Start_Date']) . "</td>";
                                     echo "<td class='align-middle'>" . htmlspecialchars($row['End_Date']) . "</td>";
                                     echo "<td class='align-middle'>" . htmlspecialchars($row['Status']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Breakfast']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Parking']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Pets']) . "</td>";
-
+                                    echo "<td class='align-middle'>" . (htmlspecialchars($row['Breakfast']) == 1 ? "&#10003" : "&#10008;") . "</td>";       
+                                    echo "<td class='align-middle'>" . (htmlspecialchars($row['Parking']) == 1 ? "&#10003" : "&#10008;") . "</td>";       
+                                    echo "<td class='align-middle'>" . (htmlspecialchars($row['Pets']) == 1 ? "&#10003" : "&#10008;") . "</td>"; 
                                     echo "<td class='align-middle'>";
                                     echo "<a href='reservation_management.php?id=" . htmlspecialchars($row['Reservation_ID']) . "' class='btn btn-primary m-1'>Reservation Data</a>";
-                                    echo "<button class='btn btn-danger m-1' data-bs-toggle='modal' data-bs-target='#CheckDeleteModal' data-user-id='" . htmlspecialchars($row['Reservation_ID']) . "'>Delete Data</button>";
+                                    echo "<button class='btn btn-danger m-1' data-bs-toggle='modal' data-bs-target='#CheckDeleteModal' data-reservation-id='" . htmlspecialchars($row['Reservation_ID']) . "'>Delete Reservation</button>";
                                     echo "</td>";
                                     echo "</tr>";
                                 }
@@ -111,7 +113,7 @@ $stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username, Email, Bi
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="confirmDeleteButton" class="btn btn-danger">Delete User</button>
+                    <button type="button" id="confirmDeleteButton" class="btn btn-danger">Delete Reservation</button>
                 </div>
             </div>
         </div>
@@ -120,14 +122,14 @@ $stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username, Email, Bi
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll('button[data-bs-toggle="modal"]').forEach(function (button) {
             button.addEventListener('click', function () {
-                var userId = this.getAttribute('data-user-id');
-                document.getElementById('confirmDeleteButton').setAttribute('data-user-id', userId);
+                var reservationID = this.getAttribute('data-reservation-id');
+                document.getElementById('confirmDeleteButton').setAttribute('data-reservation-id', reservationID);
             });
         });
 
         document.getElementById('confirmDeleteButton').addEventListener('click', function () {
-            var userId = this.getAttribute('data-user-id');
-            window.location.href = 'user_delete.php?id=' + userId;
+            var reservationID = this.getAttribute('data-reservation-id');
+            window.location.href = 'reservation_delete.php?id=' + reservationID;
         });
     });
 </script>

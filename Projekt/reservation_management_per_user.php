@@ -61,14 +61,14 @@ if ($user_id > 0) {
                                     <th scope="col" class="border-0 text-uppercase font-medium text-center">Breakfast</th>
                                     <th scope="col" class="border-0 text-uppercase font-medium text-center">Parking</th>
                                     <th scope="col" class="border-0 text-uppercase font-medium text-center">Pets</th>
-
+                                    <th scope="col" class="border-0 text-uppercase font-medium text-center">Manage</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 if($resultReservationPerUser->num_rows === 0) {
                                     echo "<tr class='text-center'>";
-                                    echo "<td colspan='9' class='align-middle fw-bold'>No reservations found</td>";
+                                    echo "<td colspan='10' class='align-middle fw-bold'>No reservations found</td>";
                                     echo "</tr>";
                                 }
                                 while ($row = $resultReservationPerUser->fetch_assoc()) {
@@ -85,13 +85,13 @@ if ($user_id > 0) {
                                     echo "<td class='align-middle'>" . htmlspecialchars($row['Start_Date']) . "</td>";
                                     echo "<td class='align-middle'>" . htmlspecialchars($row['End_Date']) . "</td>";
                                     echo "<td class='align-middle'>" . htmlspecialchars($row['Status']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Breakfast']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Parking']) . "</td>";
-                                    echo "<td class='align-middle'>" . htmlspecialchars($row['Pets']) . "</td>";
+                                    echo "<td class='align-middle'>" . (htmlspecialchars($row['Breakfast']) == 1 ? "&#10003" : "&#10008;") . "</td>";       
+                                    echo "<td class='align-middle'>" . (htmlspecialchars($row['Parking']) == 1 ? "&#10003" : "&#10008;") . "</td>";       
+                                    echo "<td class='align-middle'>" . (htmlspecialchars($row['Pets']) == 1 ? "&#10003" : "&#10008;") . "</td>";       
 
                                     echo "<td class='align-middle'>";
                                     echo "<a href='reservation_management.php?id=" . htmlspecialchars($row['Reservation_ID']) . "' class='btn btn-primary m-1'>Reservation Data</a>";
-                                    echo "<button class='btn btn-danger m-1' data-bs-toggle='modal' data-bs-target='#CheckDeleteModal' data-user-id='" . htmlspecialchars($row['Reservation_ID']) . "'>Delete Data</button>";
+                                    echo "<button class='btn btn-danger m-1' data-bs-toggle='modal' data-bs-target='#CheckDeleteModal' data-reservation-id='" . htmlspecialchars($row['Reservation_ID']) . "'>Delete Reservation</button>";
                                     echo "</td>";
                                     echo "</tr>";
                                 }
@@ -109,7 +109,7 @@ if ($user_id > 0) {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Delete User?</h5>
+                    <h5 class="modal-title">Delete Reservation?</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -117,7 +117,7 @@ if ($user_id > 0) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" id="confirmDeleteButton" class="btn btn-danger">Delete User</button>
+                    <button type="button" id="confirmDeleteButton" class="btn btn-danger">Delete Reservation</button>
                 </div>
             </div>
         </div>
@@ -126,14 +126,14 @@ if ($user_id > 0) {
     document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll('button[data-bs-toggle="modal"]').forEach(function (button) {
             button.addEventListener('click', function () {
-                var userId = this.getAttribute('data-user-id');
-                document.getElementById('confirmDeleteButton').setAttribute('data-user-id', userId);
+                var reservationID = this.getAttribute('data-reservation-id');
+                document.getElementById('confirmDeleteButton').setAttribute('data-reservation-id', reservationID);
             });
         });
 
         document.getElementById('confirmDeleteButton').addEventListener('click', function () {
-            var userId = this.getAttribute('data-user-id');
-            window.location.href = 'user_delete.php?id=' + userId;
+            var reservationID = this.getAttribute('data-reservation-id');
+            window.location.href = 'reservation_delete.php?id=' + reservationID;
         });
     });
 </script>

@@ -71,7 +71,7 @@ $result = $stmt->get_result();
                                     echo "<td class='align-middle'>";
                                     echo "<a href='user_management.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-primary m-1'>User Data</a>";
                                     echo "<a href='reservation_management_per_user.php?id=" . htmlspecialchars($row['User_ID']) . "' class='btn btn-primary m-1'>Reservation Data</a>";
-                                    echo "<button class='btn btn-danger m-1' data-bs-toggle='modal' data-bs-target='#CheckDeleteModal' data-user-id='" . htmlspecialchars($row['User_ID']) . "'>Delete Data</button>";
+                                    echo "<button class='btn btn-danger m-1' data-bs-toggle='modal' data-bs-target='#CheckDeleteModal' data-user-id='" . htmlspecialchars($row['User_ID']) . "'>Delete User</button>";
                                     echo "</td>";
                                     echo "</tr>";
                                 }

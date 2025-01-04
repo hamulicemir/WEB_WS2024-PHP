@@ -69,6 +69,7 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
                     </div>
                 </div>
             <?php endforeach; ?>
+            
         </div>
     </main>
 

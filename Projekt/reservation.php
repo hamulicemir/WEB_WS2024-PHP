@@ -13,6 +13,7 @@ if (!$conn) {
     die("Database Connection Failed: " . mysqli_connect_error());
 }
 
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $checkin = sanitize_input($_POST['checkin']);
     $checkout = sanitize_input($_POST['checkout']);
@@ -48,11 +49,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     if (empty($error)) {
-        $status = "Pending";
+        $status = "New";
         $stmt = $conn->prepare("INSERT INTO Reservation (Start_Date, End_Date, Breakfast, Parking, Pets, User_ID, Room_ID, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("ssiiiiis", $checkin, $checkout, $breakfast, $parking, $pets, $_SESSION['UserInformation']['User_ID'], $roomNo, $status);
         if ($stmt->execute()) {
             $stmt->close();
+            //get Room Price
+            $stmt = $conn->prepare("SELECT Price FROM Room WHERE Room_ID = ?");
+            $stmt->bind_param("i", $roomNo);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $price = $result->fetch_assoc()['Price'];
+            $stmt->close();
+
+            $days = abs(strtotime($checkout) - strtotime($checkin)) / 86400;
+    
+            $totalPrice = $price * $days;
+            $totalPrice += $breakfast ? 50 : 0;
+            $totalPrice += $parking ? 75 : 0;
+            $totalPrice += $pets ? 30 : 0;
+            
             $success = TRUE;
             $successMsg = "You have successfully created a reservation!";
         } else {
@@ -62,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="de">
 
@@ -148,54 +165,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         </select>
                                     </div>
                                 </div>
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#exampleModalCenter">
-                                    Reserve
-                                </button>
-
-                                <!-- Modal -->
-                                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                <hr>
+                                <div class="d-flex align-items-center">
+                                    <h3>Total: <span id="price"><?php echo $totalPrice; ?></span></h3>
+                                    <button id="CheckModalButton" type="button" class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#CheckModal">Reserve</button>
+                                </div>
+                                <div class="modal fade" id="CheckModal" tabindex="-1"
+                                    aria-labelledby="CheckModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLongTitle">Price Proposal</h5>
-                                                <button type="button" class="btn-close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    
-                                                </button>
+                                                <h5 class="modal-title">Reservation</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <p><strong>Room Price:</strong> €<?php ; ?></p>
-                                                <p><strong>Extras:</strong></p>
-                                                <!--
-                                                <ul>
-                                                    <?php if ($breakfast): ?>
-                                                        <li>Breakfast: €<?php ; ?>
-                                                        </li>
-                                                    <?php endif; ?>
-                                                    <?php if ($parking): ?>
-                                                        <li>Parking: €<?php ; ?></li>
-                                                    <?php endif; ?>
-                                                    <?php if ($pets): ?>
-                                                        <li>Pets: €<?php ; ?></li>
-                                                    <?php endif; ?>
-                                                </ul>
-                                                    -->
-                                                <hr>
-                                                <p><strong>Total Price:</strong> €</p>
+                                                Are you sure you want to do this reservation?
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Confirm
-                                                    Reservation</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save Reservation</button>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
                             </form>
                         </div>
                     </div>
@@ -221,12 +212,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             <?php if (isset($error) && !empty($error)): ?>
                 var ErrorModal = new bootstrap.Modal(document.getElementById('ErrorModal'));
                 ErrorModal.show();
             <?php endif; ?>
-        }); 1
+        });
+        1
     </script>
 
 
@@ -234,14 +226,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
-                    You have successfully created a reservation!
+                    <strong>You have successfully created a reservation!</strong><br>
+                    <strong>Total Price:</strong> <?php echo $totalPrice; ?> <br>
+                    <strong>Extras:</strong> <?php echo ($breakfast ? "Breakfast, " : "") . ($parking ? "Parking, " : "") . ($pets ? "Pets" : ""); ?> <br>
+                    <strong>Price per Night for Bed:</strong> <?php echo $price; ?> <br>
+                    <strong>Nights of Stay: </strong> <?php echo $days; ?>
                 </div>
             </div>
         </div>
     </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             <?php if (isset($success) && $success === true): ?>
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();

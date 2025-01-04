@@ -10,23 +10,23 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 if(!$conn){ die("Database Connection Failed: " . mysqli_connect_error());  }
 
-$user_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$reservation_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-if ($user_id > 0) {
-    $sql = "DELETE FROM User WHERE User_ID = ?";
+if ($reservation_id > 0) {
+    $sql = "DELETE FROM Reservation WHERE Reservation_ID = ?";
 
     if ($stmt = $conn->prepare($sql)) {
-        $stmt->bind_param("i", $user_id);
+        $stmt->bind_param("i", $reservation_id);
         if ($stmt->execute()) {
             header('Location: ' . $_SERVER['HTTP_REFERER']); // redirect zu vorheriger page
         } else {
-            echo "Fehler beim Löschen des Benutzers.";
+            echo "Fehler beim Löschen des Reservation.";
         }
         $stmt->close();
     } else {
         echo "Fehler bei der Vorbereitung der SQL-Abfrage.";
     }
 } else {
-    echo "Ungültige Benutzer-ID.";
+    echo "Ungültige Reservation-ID.";
 }
 ?>

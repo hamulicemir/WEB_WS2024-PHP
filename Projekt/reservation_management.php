@@ -32,8 +32,6 @@ if ($reservation_id > 0) {
   $result = $stmt->get_result();
   $reservationdata = $result->fetch_assoc();
   $stmt->close();
-
-
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -43,6 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $parking = isset($_POST["parking"]) ? 1 : 0;
   $pets = isset($_POST["pets"]) ? 1 : 0;
   $room = sanitize_input($_POST["room"]);
+  $statusNew = sanitize_input($_POST["status"]);
+
   $roomNo = 1;
   switch ($room) {
     case "SingleBed":
@@ -58,22 +58,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   $updates = [];
 
-    if ($checkin != $reservationdata['Start_Date']) {
-      if (strtotime($checkin) < strtotime(date('Y-m-d'))) {
-          $errors[] = "Check-in date must be after today.";
-      } elseif (strtotime($checkout) <= strtotime($checkin)) {
-          $errors[] = "Check-out date must be after the check-in date.";
-      } else {
-          $updates['Start_Date'] = $checkin;
-      }
+  if ($checkin != $reservationdata['Start_Date']) {
+    if (strtotime($checkin) < strtotime(date('Y-m-d'))) {
+      $errors[] = "Check-in date must be after today.";
+    } elseif (strtotime($checkout) <= strtotime($checkin)) {
+      $errors[] = "Check-out date must be after the check-in date.";
+    } else {
+      $updates['Start_Date'] = $checkin;
+    }
   }
-  
+
   if ($checkout != $reservationdata['End_Date']) {
-      if (strtotime($checkout) <= strtotime($checkin)) {
-          $errors[] = "Check-out date must be after the check-in date.";
-      } else {
-          $updates['End_Date'] = $checkout;
-      }
+    if (strtotime($checkout) <= strtotime($checkin)) {
+      $errors[] = "Check-out date must be after the check-in date.";
+    } else {
+      $updates['End_Date'] = $checkout;
+    }
   }
 
   if ($breakfast != $reservationdata['Breakfast']) {
@@ -87,6 +87,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
   if ($roomNo != $reservationdata['Room_ID']) {
     $updates['Room_ID'] = $roomNo;
+  }
+  if ($statusNew != $reservationdata['Status']) {
+    $updates['Status'] = $statusNew;
   }
 
   if (!empty($updates)) {
@@ -159,13 +162,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
                 ?>
                 <div class="form-floating mb-3">
-                  <select class="form-select" id="room" name="room" required> <?php //SELCECTED 
-                                                                              ?>
+                  <select class="form-select" id="room" name="room" required>
                     <option value="SingleBed" <?php if ($room === 'SingleBed') echo "selected" ?>>Single Bed</option>
                     <option value="TwoBed" <?php if ($room === 'TwoBed') echo "selected" ?>>Two Bed</option>
                     <option value="Suite" <?php if ($room === 'Suite') echo "selected" ?>>Penthouse Suite</option>
                   </select>
                   <label for="room">Room Type</label>
+                </div>
+
+                <div class="form-floating mb-3">
+                  <select class="form-select" id="status" name="status" required>
+                    <option value="New" <?php if ($reservationdata['Status'] === 'New') echo "selected" ?>>New</option>
+                    <option value="Confirmed" <?php if ($reservationdata['Status'] === 'Confirmed') echo "selected" ?>>Confirmed</option>
+                    <option value="Cancelled" <?php if ($reservationdata['Status'] === 'Cancelled') echo "selected" ?>>Cancelled</option>
+                  </select>
+                  <label for="status">Status</label>
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
@@ -198,26 +209,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
 
-<!-- Success Modal -->
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-      <div class="modal-dialog ">
-        <div class="modal-content">
-          <div class="modal-body">
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+      <div class="modal-content">
+        <div class="modal-body">
           You have successfully updated the data!
-          </div>
         </div>
       </div>
     </div>
-    </div>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
+  </div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
       <?php if (isset($AdminUpdated) && $AdminUpdated === true): ?>
         var successModal = new bootstrap.Modal(document.getElementById('successModal'));
         successModal.show();
-        setTimeout(function () {
+        setTimeout(function() {
           window.location.href = 'reservation_management.php?id=<?php echo $reservation_id ?>';
         }, 1500);
-        <?php $AdminUpdated = false; // Reset ?>
+        <?php $AdminUpdated = false; // Reset 
+        ?>
       <?php endif; ?>
     });
   </script>
@@ -249,7 +261,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </script>
 
   <?php include './inc/footer.php'; ?>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
