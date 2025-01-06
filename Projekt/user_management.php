@@ -153,8 +153,7 @@ if ($user_id > 0) {
                       data-whatever="@getbootstrap">Change Password</button>
                   </div>
 
-                  <div class="modal fade" id="AdminUpdateProfileModal" tabindex="-1"
-                    aria-labelledby="AdminUpdateProfileModalLabel" aria-hidden="true">
+                  <div class="modal fade" id="AdminUpdateProfileModal" tabindex="-1" aria-label="Save Changes?">
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -180,7 +179,7 @@ if ($user_id > 0) {
     </div>
 
     <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal fade" id="successModal" tabindex="-1" aria-label="Success of Data Change">
       <div class="modal-dialog ">
         <div class="modal-content">
           <div class="modal-body">
@@ -212,7 +211,7 @@ if ($user_id > 0) {
   </script>
 
   <!-- Error Modal -->
-  <div class="modal fade" id="ErrorUserSettingsModal" tabindex="-1" aria-labelledby="ErrorUserSettingsModalLabel"
+  <div class="modal fade" id="ErrorUserSettingsModal" tabindex="-1" aria-label=" Error in Data Change">  
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -238,8 +237,7 @@ if ($user_id > 0) {
   </script>
 
   <!-- Change Password Error Modal -->
-  <div class="modal fade" id="ErrorPasswordSettingsModal" tabindex="-1"
-    aria-labelledby="ErrorPasswordSettingsModalLabel" aria-hidden="true">
+  <div class="modal fade" id="ErrorPasswordSettingsModal" tabindex="-1" aria-label="Error in Password Change">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body">

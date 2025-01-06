@@ -254,7 +254,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       </div>
     </div>
   </section>
-  <div class="modal fade" id="ErrorModal" tabindex="-1" aria-labelledby="ErrorModalLabel" aria-hidden="true">
+  <div class="modal fade" id="ErrorModal" tabindex="-1" aria-label="Error in Registration">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
 
@@ -281,7 +281,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
 
-  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal fade" id="successModal" tabindex="-1" aria-label="Success of Registration">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body">

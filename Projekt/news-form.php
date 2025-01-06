@@ -100,9 +100,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="mb-3">
                                     <label for="newsFoto" class="form-label">Foto</label>
                                     <input type="file" class="form-control" id="newsFoto" name="newsFoto"
-                                        accept="image/jpeg">
+                                        accept="image/jpeg" aria-label="Foto Upload">
                                     <div class="text-muted mt-1" id="fileHelp">
-                                        <label for="newsFoto">Nur JPEG-Dateien.</label>
+                                        <label>Nur JPEG-Dateien.</label>
                                     </div>
                                 </div>
                                 <button type="submit" id="PostModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#successModal">Post</button>
@@ -112,7 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
             </div>
         </section>
-        <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal fade" id="successModal" tabindex="-1" aria-label="Success of posting news">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-body">

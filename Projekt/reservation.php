@@ -170,8 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <h3>Total: <span id="price"><?php echo $totalPrice; ?></span></h3>
                                     <button id="CheckModalButton" type="button" class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#CheckModal">Reserve</button>
                                 </div>
-                                <div class="modal fade" id="CheckModal" tabindex="-1"
-                                    aria-labelledby="CheckModalLabel" aria-hidden="true">
+                                <div class="modal fade" id="CheckModal" tabindex="-1" aria-label="Reservation Check">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -195,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </main>
 
-    <div class="modal fade" id="ErrorModal" tabindex="-1" aria-labelledby="ErrorModalLabel" aria-hidden="true">
+    <div class="modal fade" id="ErrorModal" tabindex="-1" aria-label="Error Message"> 
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 
@@ -222,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </script>
 
 
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal fade" id="successModal" tabindex="-1" aria-label="Success of Reservation">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">

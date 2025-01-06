@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
@@ -35,11 +35,11 @@
               <img src="./Pictures/bed-4416515_1920.jpg" class="d-block w-100 h-100" alt="Third slide" style="object-fit: cover;">
             </div>
           </div>
-          <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-bs-slide="prev" aria-label="previous-picture">
+            <span class="carousel-control-prev-icon" aria-hidden="true" aria-label="previous-picture"></span>
           </a>
-          <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-bs-slide="next" aria-label="next-picture">
+            <span class="carousel-control-next-icon" aria-hidden="true"aria-label="next-picture"></span>
           </a>
         </div>
       </div>

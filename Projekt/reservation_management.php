@@ -183,8 +183,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <button type="reset" class="btn btn-light">Reset Changes</button>
                   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SaveChangesModal">Save Changes</button>
 
-                  <div class="modal fade" id="SaveChangesModal" tabindex="-1"
-                    aria-labelledby="SaveChangesModalLabel" aria-hidden="true">
+                  <div class="modal fade" id="SaveChangesModal" tabindex="-1" aria-label="Save Changes?">
                     <div class="modal-dialog modal-dialog-centered">
                       <div class="modal-content">
                         <div class="modal-header">
@@ -210,7 +209,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </div>
 
   <!-- Success Modal -->
-  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal fade" id="successModal" tabindex="-1" aria-label="Success of Change Password">
     <div class="modal-dialog ">
       <div class="modal-content">
         <div class="modal-body">
@@ -235,7 +234,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   </script>
 
   <!-- Error Modal -->
-  <div class="modal fade" id="ErrorUserSettingsModal" tabindex="-1" aria-labelledby="ErrorUserSettingsModalLabel"
+  <div class="modal fade" id="ErrorUserSettingsModal" tabindex="-1" aria-label="Error During Data Update"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">

@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 <div class="container">
   <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-2 border-bottom">
     <div class="col-md-3 mb-2 mb-md-0">
-      <img src="./Pictures/Icon.png" alt="Logo" width="110" height="60">
+      <img src="./Pictures/Icon.png" alt="Sonnenschuss-Logo" width="110" height="60">
     </div>
 
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
@@ -22,7 +22,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="dropdown">
           <a href="" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
             <!-- Insert Dropdown button with bootstrap-->
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16" alt="User Settings" aria-label="User Settings">
               <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"></path>
               <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"></path>
             </svg>

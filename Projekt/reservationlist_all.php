@@ -100,8 +100,7 @@ $stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username, Email, Bi
         </div>
     </div>
 
-    <div class="modal fade" id="CheckDeleteModal" tabindex="-1" aria-labelledby="CheckDeleteModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="CheckDeleteModal" tabindex="-1" aria-label="Delete User?">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">

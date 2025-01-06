@@ -104,8 +104,7 @@ if ($user_id > 0) {
         </div>
     </div>
 
-    <div class="modal fade" id="CheckDeleteModal" tabindex="-1" aria-labelledby="CheckDeleteModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="CheckDeleteModal" tabindex="-1" aria-label="Delete Reservation?">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">

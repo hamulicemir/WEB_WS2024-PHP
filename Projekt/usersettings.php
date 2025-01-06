@@ -94,15 +94,15 @@
       <div class="card-header border-bottom mb-3 d-flex d-md-none">
         <ul class="nav nav-tabs card-header-tabs nav-gap-x-1" role="tablist"> <!-- Responsive navbar falls Seite zu klein wird -->
           <li class="nav-item">
-            <a href="#account" data-bs-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></a>
+            <a href="#account" aria-label="Account Settings" data-bs-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg></a>
           </li>
           <?php if ($_SESSION['UserInformation']['Role_ID'] == 1) : ?>
           <li class="nav-item">
-            <a href="#usermanagement" data-bs-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"></path></svg></a>
+            <a href="#usermanagement" aria-label="User Management Settings" data-bs-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"></path></svg></a>
           </li>
           <?php endif; ?>
           <li class="nav-item">
-            <a href="#notification" data-bs-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
+            <a href="#notification" aria-label="User Notification Settings" data-bs-toggle="tab" class="nav-link has-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></a>
           </li>
         </ul>
       </div>
@@ -135,7 +135,7 @@
 
             <button type="button" id="UpdateProfileButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#checkModal">Update Profile</button>
             
-            <div class="modal fade" id="checkModal" tabindex="-1" aria-labelledby="checkModalLabel" aria-hidden="true">
+            <div class="modal fade" id="checkModal" tabindex="-1" aria-label="Save Changes">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -202,41 +202,17 @@
         <div class="tab-pane" id="notification">
           <h6>NOTIFICATION SETTINGS</h6>
           <hr>
-          <form>
             <div class="form-group">
               <label class="d-block mb-1">Alerts</label>
               <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" id="customCheck1" checked="">
-                <label class="custom-control-label mb-3" for="customCheck1">Email Reservation</label> <!-- Benachrichtigung bei Reservierung, Werbung usw... -->
+                <label class="custom-control-label mb-3" for="customCheck1">Email Reservation</label> <!-- Benachrichtigung bei Reservierung, Werbung oder sonstiges... -->
+              </div>
+              <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="customCheck2" checked="">
+                <label class="custom-control-label mb-3" for="customCheck2">News Updates</label>
               </div>
             </div>
-            <div class="form-group mb-2">
-              <label class="d-block mb-2">SMS Notifications</label>
-              <ul class="list-group list-group-sm">
-                <li class="list-group-item has-icon">
-                  Comments
-                  <div class="custom-control custom-control-nolabel custom-switch ml-auto">
-                    <input type="checkbox" class="custom-control-input" id="customSwitch1" checked="">
-                    <label class="custom-control-label" for="customSwitch1"></label>
-                  </div>
-                </li>
-                <li class="list-group-item has-icon">
-                  News Updates
-                  <div class="custom-control custom-control-nolabel custom-switch ml-auto">
-                    <input type="checkbox" class="custom-control-input" id="customSwitch2">
-                    <label class="custom-control-label" for="customSwitch2"></label>
-                  </div>
-                </li>
-                <li class="list-group-item has-icon">
-                  Reminders
-                  <div class="custom-control custom-control-nolabel custom-switch ml-auto">
-                    <input type="checkbox" class="custom-control-input" id="customSwitch3" checked="">
-                    <label class="custom-control-label" for="customSwitch3"></label>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </form>
         </div>
       </div>
     </div>
@@ -246,7 +222,7 @@
 
 
 
-<div class="modal fade" id="ErrorUserSettingsModal" tabindex="-1" aria-labelledby="ErrorUserSettingsModalLabel" aria-hidden="true">
+<div class="modal fade" id="ErrorUserSettingsModal" tabindex="-1" aria-label="Error of Update">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body">
@@ -271,7 +247,7 @@
 </script>
 
 
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+<div class="modal fade" id="successModal" tabindex="-1" aria-label="Success of Update">
     <div class="modal-dialog ">
       <div class="modal-content">
         <div class="modal-body">

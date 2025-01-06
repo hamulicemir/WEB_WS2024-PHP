@@ -138,7 +138,7 @@
                 </div>
             </div>
     </section>
-    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal fade" id="successModal" tabindex="-1" aria-label="Success of Change Password">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
 

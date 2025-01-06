@@ -30,7 +30,7 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
     <main class="container my-5">
         <div class="row">
             <div class="col-8 mb-4">
-                <h2 class="mb-4">Latest Posts</h2>
+                <h1 class="mb-4">Latest Posts</h1>
             </div>
             <?php
             if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && $_SESSION['UserInformation']['Role_ID'] === 1) :
@@ -69,8 +69,7 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
             <?php endwhile; ?>
         </div>
     </main>
-    <div class="modal fade" id="CheckDeleteModal" tabindex="-1" aria-labelledby="CheckDeleteModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="CheckDeleteModal" tabindex="-1" aria-label="Delete News?">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
