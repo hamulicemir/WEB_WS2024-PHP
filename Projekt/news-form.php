@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="mb-3">
                                     <label for="newsFoto" class="form-label">Foto</label>
                                     <input type="file" class="form-control" id="newsFoto" name="newsFoto"
-                                        accept="image/*">
+                                        accept="image/jpeg">
                                     <div class="text-muted mt-1" id="fileHelp">
                                         <label for="newsFoto">Nur JPEG-Dateien.</label>
                                     </div>

@@ -24,7 +24,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <img src="./Pictures/P5.jpg" class="img-fluid" alt="Responsive image">
                         <div class="card-body">
                             <p class="card-text">
-                                This is text.
+                                Welcome to Paradise Resort, where relaxation meets tropical luxury. Unwind by our crystal-clear pool, surrounded by lush greenery and swaying palm trees. Enjoy a refreshing drink at our poolside bar, soak up the sun on our comfortable loungers, and let your worries drift away under the serene blue skies. Experience the perfect escape, tailored for your ultimate comfort and enjoyment.
                             </p>
                         </div>
                     </div>
