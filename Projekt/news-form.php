@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -13,20 +17,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $newsTitel = sanitize_input($_POST['newsTitel']);
     $newsText = sanitize_input($_POST['newsText']);
 
+    $stmt = $conn->prepare("SELECT MAX(News_ID) FROM News");
+    $stmt->execute();
+    $maxID = $stmt->get_result()->fetch_row()[0];
+
+    $thumbDir = './Pictures/Thumbnails/';
+    $resizedDir = './Pictures/Thumbnails-resized/';
+
     if (!is_dir($thumbDir)) {
         mkdir($thumbDir, 0777, true);
     }
     if (!is_dir($resizedDir)) {
         mkdir($resizedDir, 0777, true);
     }
-
-    $stmt = $conn->prepare("SELECT MAX(News_ID) FROM News");
-    $stmt->execute();
-    $maxID = $stmt->get_result()->fetch_row()[0];
-    $stmt->close();
-
-    $thumbDir = './Pictures/Thumbnails/';
-    $resizedDir = './Pictures/Thumbnails-resized/';
 
     $thumbName = $thumbDir . $newsTitel . "-" . $maxID .".jpeg";
     $destinationPath = $resizedDir . $newsTitel . "-" . $maxID . ".jpeg";
@@ -43,7 +46,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 } else {
                     echo "<div class='alert alert-danger'>Fehler beim Hochladen des News-Beitrags auf die Datenbank.</div>";
                 }
-                $stmt->close();
             } else {
                 echo "<div class='alert alert-danger'>Fehler beim Erstellen des Thumbnails.</div>";
             }
@@ -51,16 +53,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<div class='alert alert-danger'>Fehler beim Hochladen des Bildes.</div>";
         }
     } else {
-        $stmt = $conn->prepare("INSERT INTO News (User_ID, Title, Description) VALUES (?, ?, ?)");
-        $stmt->bind_param('iss', $_SESSION['UserInformation']['User_ID'], $newsTitel, $newsText);
+        //keine Datei hochgeladen
+        $imageP = null;
+        $stmt = $conn->prepare("INSERT INTO News (User_ID, Title, Description, Image_Path) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param('isss', $_SESSION['UserInformation']['User_ID'], $newsTitel, $newsText, $imageP);
         if ($stmt->execute()) {
             echo "<div class='alert alert-success'>News-Beitrag wurde erfolgreich erstellt.</div>";
             $success = true;
         } else {
             echo "<div class='alert alert-danger'>Fehler beim Hochladen des News-Beitrags auf die Datenbank.</div>";
         }
-        $stmt->close();
     }
+    $stmt->close();
+
 }
 ?>
 <!DOCTYPE html>
