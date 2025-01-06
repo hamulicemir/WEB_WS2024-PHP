@@ -13,30 +13,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $newsTitel = sanitize_input($_POST['newsTitel']);
     $newsText = sanitize_input($_POST['newsText']);
 
+    if (!is_dir($thumbDir)) {
+        mkdir($thumbDir, 0777, true);
+    }
+    if (!is_dir($resizedDir)) {
+        mkdir($resizedDir, 0777, true);
+    }
+
+    $stmt = $conn->prepare("SELECT MAX(News_ID) FROM News");
+    $stmt->execute();
+    $maxID = $stmt->get_result()->fetch_row()[0];
+    $stmt->close();
+
+    $thumbDir = './Pictures/Thumbnails/';
+    $resizedDir = './Pictures/Thumbnails-resized/';
+
+    $thumbName = $thumbDir . $newsTitel . "-" . $maxID .".jpeg";
+    $destinationPath = $resizedDir . $newsTitel . "-" . $maxID . ".jpeg";
+
     if (isset($_FILES['newsFoto']) && $_FILES['newsFoto']['error'] == 0) {
-        $thumbDir = './Pictures/Thumbnails/';
-        $resizedDir = './Pictures/Thumbnails-resized/';
-
-        if (!is_dir($thumbDir)) {
-            mkdir($thumbDir, 0777, true);
-        }
-        if (!is_dir($resizedDir)) {
-            mkdir($resizedDir, 0777, true);
-        }
-
-        $stmt = $conn->prepare("SELECT MAX(News_ID) FROM News");
-        $stmt->execute();
-        $maxID = $stmt->get_result()->fetch_row()[0];
-        $stmt->close();
-
-        // Pfade definieren
-        $thumbName = $thumbDir . $newsTitel . "-" . $maxID .".jpeg";
-        $destinationPath = $resizedDir . $newsTitel . "-" . $maxID . ".jpeg";
-
-        // Datei verschieben
         if (move_uploaded_file($_FILES['newsFoto']['tmp_name'], $thumbName)) {
             // Thumbnail erstellen
-            if (createThumbnail($thumbName, $destinationPath, 640, 360)) { //720x480 auch möglich
+            if (createThumbnail($thumbName, $destinationPath, 640, 360)) { 
                 $stmt = $conn->prepare("INSERT INTO News (User_ID, Title, Description, Image_Path) VALUES (?, ?, ?, ?)");
                 $stmt->bind_param('isss', $_SESSION['UserInformation']['User_ID'], $newsTitel, $newsText, $destinationPath);
                 if ($stmt->execute()) {
@@ -53,7 +51,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<div class='alert alert-danger'>Fehler beim Hochladen des Bildes.</div>";
         }
     } else {
-        echo "<div class='alert alert-danger'>Fehler beim Hochladen des Bildes.</div>";
+        $stmt = $conn->prepare("INSERT INTO News (User_ID, Title, Description) VALUES (?, ?, ?)");
+        $stmt->bind_param('iss', $_SESSION['UserInformation']['User_ID'], $newsTitel, $newsText);
+        if ($stmt->execute()) {
+            echo "<div class='alert alert-success'>News-Beitrag wurde erfolgreich erstellt.</div>";
+            $success = true;
+        } else {
+            echo "<div class='alert alert-danger'>Fehler beim Hochladen des News-Beitrags auf die Datenbank.</div>";
+        }
+        $stmt->close();
     }
 }
 ?>
@@ -89,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="mb-3">
                                     <label for="newsFoto" class="form-label">Foto</label>
                                     <input type="file" class="form-control" id="newsFoto" name="newsFoto"
-                                        accept="image/*" required>
+                                        accept="image/*">
                                     <div class="text-muted mt-1" id="fileHelp">
                                         <label for="newsFoto">Nur JPEG-Dateien.</label>
                                     </div>
