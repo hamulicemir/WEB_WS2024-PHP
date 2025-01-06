@@ -29,10 +29,10 @@ if (session_status() === PHP_SESSION_NONE) {
                         </div>
                     </div>
                 </div>
-
+              
                 <div class="col">
                     <div class="card shadow-sm">
-                        <img src="./Pictures/P5.jpg" class="img-fluid" alt="Responsive image">
+                        <img src="./Pictures/alkoholicari.jpg" class="img-fluid" alt="Responsive image">
                         <div class="card-body">
                             <p class="card-text">
                                 This is text.
@@ -43,7 +43,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
                 <div class="col">
                     <div class="card shadow-sm">
-                    <img src="./Pictures/P5.jpg" class="img-thumbnail" alt="Responsive image">
+                    <img src="./Pictures/soba_zena.jpg" class="img-thumbnail" alt="Responsive image">
                     <div class="card-body">
                             <p class="card-text">
                                 This is text.
@@ -54,7 +54,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
                 <div class="col">
                     <div class="card shadow-sm">
-                        <img src="./Pictures/P5.jpg" class="img-thumbnail" alt="Responsive image">
+                        <img src="./Pictures/pexels-pixabay-261101.jpg" class="img-thumbnail" alt="Responsive image">
                         <div class="card-body">
                             <p class="card-text">
                                 This is text.
