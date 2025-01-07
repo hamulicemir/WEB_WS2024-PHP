@@ -23,6 +23,12 @@ function createThumbnail($srcPath, $destPath, $width, $height): bool
         echo "<div class='alert alert-danger'>Fehler: Bildinformationen konnten nicht abgerufen werden oder das Bild ist kein JPEG.</div>";
         return false;
     }
+    
+    $fileExtension = strtolower(pathinfo($srcPath, PATHINFO_EXTENSION));
+    if ($fileExtension !== 'jpeg') {
+        echo "<div class='alert alert-danger'>Fehler: Die Datei ist keine JPEG-Datei.</div>";
+        return false;
+    }
 
     $srcWidth = $imageInfo[0];
     $srcHeight = $imageInfo[1];

@@ -6,6 +6,11 @@ if (session_status() === PHP_SESSION_NONE) {
 include './inc/functions.php';
 include("./inc/dbconnection.php");
 
+if ((isset($_SESSION['loggedin']) && ($_SESSION['loggedin']))) {
+    header("Location: index.php");
+    exit();
+}
+
 if (!$conn) {
     die("Datenbankverbindung fehlgeschlagen: " . mysqli_connect_error());
 }
@@ -25,28 +30,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
     $_SESSION["UserInformation"] = $user;
-    if ($user['status_user'] == 'Aktiv') {
-        if ($result->num_rows > 0) {
-            $hashedPassword = $user['password_hash'];
+    if ($result->num_rows > 0) {
+        if ($user['status_user'] == 'Aktiv') {
+            if ($result->num_rows > 0) {
+                $hashedPassword = $user['password_hash'];
 
-            if (password_verify($enteredPassword, $hashedPassword)) {
-                $_SESSION['loggedin'] = true;
-                $_SESSION["Session_User"] = $enteredUser;
-                updateUserInformation($enteredUser);
-                $success = true;
+                if (password_verify($enteredPassword, $hashedPassword)) {
+                    $_SESSION['loggedin'] = true;
+                    $_SESSION["Session_User"] = $enteredUser;
+                    updateUserInformation($enteredUser);
+                    $success = true;
+                } else {
+                    $_SESSION['loggedin'] = false;
+                    $errors["formPassword"] = true;
+                }
             } else {
                 $_SESSION['loggedin'] = false;
-                $errors["formPassword"] = true;
             }
+            $stmt->close();
         } else {
             $_SESSION['loggedin'] = false;
+            $Inaktiv = true;
+            $errors["formPassword"] = true;
+            $errors["formUser"] = true;
         }
-        $stmt->close();
-    } else {
+    }
+    else{
         $_SESSION['loggedin'] = false;
-        $Inaktiv = true;
         $errors["formPassword"] = true;
         $errors["formUser"] = true;
+        echo '<div class="alert alert-danger mt-2" role="alert">Your Account does not exist.</div>';
     }
 }
 ?>
@@ -83,48 +96,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col-12 col-lg-9 col-xl-7">
                     <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
                         <div class="card-body p-4 p-md-5">
-                            <?php if (!(isset($_SESSION['loggedin']) && ($_SESSION['loggedin']))): ?>
-                                <h2 class="fw-bold mb-3 mx-auto text-center">Login</h2>
-                                <form action="" method="POST">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="floatingUser"
-                                            placeholder="name@example.com" name="formUser" value="<?php if (isset($enteredUser))
-                                                echo $enteredUser; ?>" required>
+                            <h2 class="fw-bold mb-3 mx-auto text-center">Login</h2>
+                            <form action="" method="POST">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="floatingUser"
+                                        placeholder="name@example.com" name="formUser" value="<?php if (isset($enteredUser))
+                                            echo $enteredUser; ?>" required>
 
-                                        <label for="floatingUser">Username</label>
+                                    <label for="floatingUser">Username</label>
 
-                                        <?php if ($errors["formUser"]): ?>
-                                            <div class="invalid-feedback">Invalid Username.</div>
-                                        <?php endif; ?>
-                                    </div>
+                                    <?php if ($errors["formUser"]): ?>
+                                        <div class="invalid-feedback">Invalid Username.</div>
+                                    <?php endif; ?>
+                                </div>
 
-                                    <div class="form-floating mb-3">
-                                        <input type="password"
-                                            class="form-control 
+                                <div class="form-floating mb-3">
+                                    <input type="password"
+                                        class="form-control 
                                     <?php if (!$errors["formUser"])
                                         echo $errors['formPassword'] ? 'is-invalid' : ($enteredPassword ? 'is-valid' : ''); ?>"
-                                            id="floatingPassword" placeholder="Passwort" name="formPassword" required>
+                                        id="floatingPassword" placeholder="Passwort" name="formPassword" required>
 
-                                        <label for="floatingPassword">Passwort</label>
-                                        <?php if ($errors["formPassword"]): ?>
-                                            <div class="invalid-feedback">Invalid Passwort.</div>
-                                        <?php endif; ?>
+                                    <label for="floatingPassword">Passwort</label>
+                                    <?php if ($errors["formPassword"]): ?>
+                                        <div class="invalid-feedback">Invalid Passwort.</div>
+                                    <?php endif; ?>
 
-                                        <?php if ($errors["formUser"]): ?>
-                                            <div class="invalid-feedback">Invalid Username.</div>
-                                        <?php endif; ?>
+                                    <?php if ($errors["formUser"]): ?>
+                                        <div class="invalid-feedback">Invalid Username.</div>
+                                    <?php endif; ?>
 
-                                        <?php
-                                        if (isset($Inaktiv) && $Inaktiv) {
-                                            echo '<div class="alert alert-danger mt-2" role="alert">Your Account is inactive. Please contact an administrator.</div>';
-                                        }
-                                        ?>
-                                    </div>
-                                    <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Login</button>
-                                </form>
-                            <?php else: ?>
-                                <?php header("Location: index.php"); ?>
-                            <?php endif; ?>
+                                    <?php
+                                    if (isset($Inaktiv) && $Inaktiv) {
+                                        echo '<div class="alert alert-danger mt-2" role="alert">Your Account is inactive or does not exist. Please contact an administrator.</div>';
+                                    }
+                                    ?>
+                                </div>
+                                <button class="btn btn-primary btn-lg btn-block w-100" type="submit">Login</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -153,7 +162,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     </script>
     </script>
-    <?php include './inc/footer.php'; ?>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

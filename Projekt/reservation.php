@@ -4,6 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include './inc/dbconnection.php';
 include './inc/functions.php';
+$totalPrice = null;
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header('location: login.php');
     exit;
@@ -22,20 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $pets = sanitize_input(isset($_POST['pets']));
     $room = sanitize_input($_POST['room']);
     $roomNo = null;
-    if (isset($room)) {
-        switch ($room) {
-            case "SingleBed":
-                $roomNo = 1;
-                break;
-            case "TwoBed":
-                $roomNo = 2;
-                break;
-            case "Penthouse":
-                $roomNo = 3;
-                break;
-            default:
-                $roomNo = null;
-        }
+
+    if (isset($room) && !empty($room)) {
+        $roomNo = $room;
     } else {
         $roomNo = null;
     }
@@ -54,7 +44,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("ssiiiiis", $checkin, $checkout, $breakfast, $parking, $pets, $_SESSION['UserInformation']['User_ID'], $roomNo, $status);
         if ($stmt->execute()) {
             $stmt->close();
-            //get Room Price
+
+            // Verfügbarkeit aktualisieren (optional, falls Kapazität auf Zimmer-Level reduziert werden soll)
+            $stmt = $conn->prepare("UPDATE Room SET Availability = Availability - 1 WHERE Room_ID = ? AND Availability > 0");
+            $stmt->bind_param("i", $roomNo);
+            $stmt->execute();
+            $stmt->close();
+
+            // Preiskalkulation
             $stmt = $conn->prepare("SELECT Price FROM Room WHERE Room_ID = ?");
             $stmt->bind_param("i", $roomNo);
             $stmt->execute();
@@ -63,12 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $stmt->close();
 
             $days = abs(strtotime($checkout) - strtotime($checkin)) / 86400;
-    
+
             $totalPrice = $price * $days;
             $totalPrice += $breakfast ? 50 : 0;
             $totalPrice += $parking ? 75 : 0;
             $totalPrice += $pets ? 30 : 0;
-            
+
             $success = TRUE;
             $successMsg = "You have successfully created a reservation!";
         } else {
@@ -156,32 +153,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                             <label class="form-check-label" for="pets">Pets</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 mt-3 mb-4">
+                                    <?php
+                                        $stmt = $conn->prepare("SELECT Room_ID, Room_Type, Availability FROM Room WHERE Availability > 0");
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                    ?>
+                                    <div class="col-md-6 mt-3 mb-4">
                                         <label for="room">Room Selection</label>
                                         <select class="form-select" id="room" name="room" required="">
-                                            <option value="SingleBed">Single Bed</option>
-                                            <option value="TwoBed">Two Bed</option>
-                                            <option value="Penthouse">Penthouse Suit</option>
+                                            <?php while ($row = $result->fetch_assoc()): ?>
+                                                <option value="<?php echo $row['Room_ID']; ?>">
+                                                    <?php echo $row['Room_Type'] . " - Available: " . $row['Availability']; ?>
+                                                </option>
+                                            <?php endwhile; ?>
                                         </select>
                                     </div>
+                                    <?php
+                                    $stmt->close();
+                                    ?>
                                 </div>
                                 <hr>
                                 <div class="d-flex align-items-center">
                                     <h3>Total: <span id="price"><?php echo $totalPrice; ?></span></h3>
-                                    <button id="CheckModalButton" type="button" class="btn btn-primary ms-auto" data-bs-toggle="modal" data-bs-target="#CheckModal">Reserve</button>
+                                    <button id="CheckModalButton" type="button" class="btn btn-primary ms-auto"
+                                        data-bs-toggle="modal" data-bs-target="#CheckModal">Reserve</button>
                                 </div>
                                 <div class="modal fade" id="CheckModal" tabindex="-1" aria-label="Reservation Check">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Reservation</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 Are you sure you want to do this reservation?
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Close</button>
                                                 <button type="submit" class="btn btn-primary">Save Reservation</button>
                                             </div>
                                         </div>
@@ -194,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </main>
 
-    <div class="modal fade" id="ErrorModal" tabindex="-1" aria-label="Error Message"> 
+    <div class="modal fade" id="ErrorModal" tabindex="-1" aria-label="Error Message">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 
@@ -211,7 +221,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             <?php if (isset($error) && !empty($error)): ?>
                 var ErrorModal = new bootstrap.Modal(document.getElementById('ErrorModal'));
                 ErrorModal.show();
@@ -227,7 +237,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="modal-body">
                     <strong>You have successfully created a reservation!</strong><br>
                     <strong>Total Price:</strong> <?php echo $totalPrice; ?> <br>
-                    <strong>Extras:</strong> <?php echo ($breakfast ? "Breakfast, " : "") . ($parking ? "Parking, " : "") . ($pets ? "Pets" : ""); ?> <br>
+                    <strong>Extras:</strong>
+                    <?php echo ($breakfast ? "Breakfast, " : "") . ($parking ? "Parking, " : "") . ($pets ? "Pets" : ""); ?>
+                    <br>
                     <strong>Price per Night for Bed:</strong> <?php echo $price; ?> <br>
                     <strong>Nights of Stay: </strong> <?php echo $days; ?>
                 </div>
@@ -236,7 +248,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             <?php if (isset($success) && $success === true): ?>
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();

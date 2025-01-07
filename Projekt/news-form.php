@@ -2,7 +2,7 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
+$success = false;
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -16,55 +16,61 @@ if (!$conn) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $newsTitel = sanitize_input($_POST['newsTitel']);
     $newsText = sanitize_input($_POST['newsText']);
+    $imageP = null;
 
-    $stmt = $conn->prepare("SELECT MAX(News_ID) FROM News");
-    $stmt->execute();
-    $maxID = $stmt->get_result()->fetch_row()[0];
+    if (empty($newsTitel) || empty($newsText)) {
+        echo "<div class='alert alert-danger'>Bitte füllen Sie alle Felder aus.</div>";
+        exit();
+    } else {
 
-    $thumbDir = './Pictures/Thumbnails/';
-    $resizedDir = './Pictures/Thumbnails-resized/';
+        $stmt = $conn->prepare("SELECT MAX(News_ID) FROM News");
+        $stmt->execute();
+        $maxID = $stmt->get_result()->fetch_row()[0];
 
-    if (!is_dir($thumbDir)) {
-        mkdir($thumbDir, 0777, true);
-    }
-    if (!is_dir($resizedDir)) {
-        mkdir($resizedDir, 0777, true);
-    }
+        $thumbDir = './Pictures/Thumbnails/';
+        $resizedDir = './Pictures/Thumbnails-resized/';
 
-    $thumbName = $thumbDir . $newsTitel . "-" . $maxID .".jpeg";
-    $destinationPath = $resizedDir . $newsTitel . "-" . $maxID . ".jpeg";
+        if (!is_dir($thumbDir)) {
+            mkdir($thumbDir, 0777, true);
+        }
+        if (!is_dir($resizedDir)) {
+            mkdir($resizedDir, 0777, true);
+        }
 
-    if (isset($_FILES['newsFoto']) && $_FILES['newsFoto']['error'] == 0) {
-        if (move_uploaded_file($_FILES['newsFoto']['tmp_name'], $thumbName)) {
-            // Thumbnail erstellen
-            if (createThumbnail($thumbName, $destinationPath, 640, 360)) { 
-                $stmt = $conn->prepare("INSERT INTO News (User_ID, Title, Description, Image_Path) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param('isss', $_SESSION['UserInformation']['User_ID'], $newsTitel, $newsText, $destinationPath);
-                if ($stmt->execute()) {
-                    echo "<div class='alert alert-success'>News-Beitrag wurde erfolgreich erstellt.</div>";
-                    $success = true;
+        $thumbName = $thumbDir . $newsTitel . "-" . $maxID . ".jpeg";
+        $destinationPath = $resizedDir . $newsTitel . "-" . $maxID . ".jpeg";
+
+        if (isset($_FILES['newsFoto']) && $_FILES['newsFoto']['error'] == 0) {
+            if (move_uploaded_file($_FILES['newsFoto']['tmp_name'], $thumbName)) {
+                // Thumbnail erstellen
+                if (createThumbnail($thumbName, $destinationPath, 640, 360)) {
+                    $stmt = $conn->prepare("INSERT INTO News (User_ID, Title, Description, Image_Path) VALUES (?, ?, ?, ?)");
+                    $stmt->bind_param('isss', $_SESSION['UserInformation']['User_ID'], $newsTitel, $newsText, $destinationPath);
+                    if ($stmt->execute()) {
+                        echo "<div class='alert alert-success'>News-Beitrag wurde erfolgreich erstellt.</div>";
+                        $success = true;
+                    } else {
+                        echo "<div class='alert alert-danger'>Fehler beim Hochladen des News-Beitrags auf die Datenbank.</div>";
+                    }
                 } else {
-                    echo "<div class='alert alert-danger'>Fehler beim Hochladen des News-Beitrags auf die Datenbank.</div>";
+                    echo "<div class='alert alert-danger'>Fehler beim Erstellen des Thumbnails.</div>";
                 }
             } else {
-                echo "<div class='alert alert-danger'>Fehler beim Erstellen des Thumbnails.</div>";
+                echo "<div class='alert alert-danger'>Fehler beim Hochladen des Bildes.</div>";
             }
         } else {
-            echo "<div class='alert alert-danger'>Fehler beim Hochladen des Bildes.</div>";
+            //keine Datei hochgeladen
+            $stmt = $conn->prepare("INSERT INTO News (User_ID, Title, Description, Image_Path) VALUES (?, ?, ?, ?)");
+            $stmt->bind_param('isss', $_SESSION['UserInformation']['User_ID'], $newsTitel, $newsText, $imageP);
+            if ($stmt->execute()) {
+                echo "<div class='alert alert-success'>News-Beitrag wurde erfolgreich erstellt.</div>";
+                $success = true;
+            } else {
+                echo "<div class='alert alert-danger'>Fehler beim Hochladen des News-Beitrags auf die Datenbank.</div>";
+            }
         }
-    } else {
-        //keine Datei hochgeladen
-        $imageP = null;
-        $stmt = $conn->prepare("INSERT INTO News (User_ID, Title, Description, Image_Path) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param('isss', $_SESSION['UserInformation']['User_ID'], $newsTitel, $newsText, $imageP);
-        if ($stmt->execute()) {
-            echo "<div class='alert alert-success'>News-Beitrag wurde erfolgreich erstellt.</div>";
-            $success = true;
-        } else {
-            echo "<div class='alert alert-danger'>Fehler beim Hochladen des News-Beitrags auf die Datenbank.</div>";
-        }
+        $stmt->close();
     }
-    $stmt->close();
 
 }
 ?>
@@ -105,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <label>Nur JPEG-Dateien.</label>
                                     </div>
                                 </div>
-                                <button type="submit" id="PostModal" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#successModal">Post</button>
+                                <button type="submit" id="PostModal" class="btn btn-primary">Post</button>
                             </form>
                         </div>
                     </div>
@@ -122,11 +128,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
         </div>
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 <?php if (isset($success) && $success === true): ?>
                     var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                     successModal.show();
-                    setTimeout(function() {
+                    setTimeout(function () {
                         successModal.hide();
                     }, 1500);
                 <?php endif; ?>
