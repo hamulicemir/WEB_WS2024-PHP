@@ -36,7 +36,7 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
             if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && $_SESSION['UserInformation']['Role_ID'] === 1) :
             ?>
                 <div class="col-4 mb-4 d-flex justify-content-end">
-                    <a href="./news-form.php"><button type="button" class="btn btn-primary me-3">Neuer Beitrag</button></a>
+                    <a href="./news-form.php"><button type="button" class="btn btn-primary me-3">New Post</button></a>
                 </div>
             <?php endif; ?>
 

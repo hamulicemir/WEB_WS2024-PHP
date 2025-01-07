@@ -100,5 +100,4 @@ function UsernameAvailable($Username){
     $stmt->close();
     return $result->num_rows === 0;
 }
-
 ?>
