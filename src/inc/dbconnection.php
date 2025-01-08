@@ -2,7 +2,7 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-include("dbaccess.php");
+include("./config/dbaccess.php");
 global $conn;
 if (!isset($conn) || $conn === null) {
     $conn = new mysqli($host, $user, $password, $database);
