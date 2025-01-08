@@ -17,9 +17,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $stmt->close();
 
-$stmt = $conn->prepare("SELECT User_ID, Firstname, Lastname, Username, Email, Birthday, status_user FROM User WHERE User_ID = ?");
-
-
 ?>
 
 <!DOCTYPE html>

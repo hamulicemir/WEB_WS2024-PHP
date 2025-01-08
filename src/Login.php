@@ -20,21 +20,22 @@ $errors["formUser"] = false;
 $errors["formPassword"] = false;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
     $enteredUser = sanitize_input($_POST["formUser"]);
     $enteredPassword = sanitize_input($_POST["formPassword"]);
 
+    //speicert alle Userdaten des eingegeben Nutzers
     $stmt = $conn->prepare("SELECT * FROM User WHERE Username = ?");
     $stmt->bind_param("s", $enteredUser);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result->fetch_assoc();
     $_SESSION["UserInformation"] = $user;
-    if ($result->num_rows > 0) {
-        if ($user['status_user'] == 'Aktiv') {
+    if ($result->num_rows > 0) { //wenn mind. 1 Reihe vorhanden ist, gibt es einen User
+        if ($user['status_user'] == 'Aktiv') { //User Status Check
             if ($result->num_rows > 0) {
+                //ziehen das gehashete passwort aus db
                 $hashedPassword = $user['password_hash'];
-
+                //checkt das hashed passwort gegen das eingebene
                 if (password_verify($enteredPassword, $hashedPassword)) {
                     $_SESSION['loggedin'] = true;
                     $_SESSION["Session_User"] = $enteredUser;

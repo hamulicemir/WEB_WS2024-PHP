@@ -8,7 +8,7 @@ include("./inc/dbconnection.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  if(!$conn){
+  if (!$conn) {
     die("Datenbankverbindung fehlgeschlagen: " . mysqli_connect_error());
   }
 
@@ -22,22 +22,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $passwordRepeat = sanitize_input($_POST['formPasswordSecond']);
 
   //based on this article: https://en.wikipedia.org/wiki/ISO/IEC_5218
-  if(isset($gender)){
-    switch($gender){ 
-        case "male": 
-            $gender = 1; 
-            break;
-        case "female": 
-            $gender = 2; 
-            break;
-        case "other":
-            $gender = 0;
-            break;
-        default:
-            $gender = null;
-    }} else {
+  if (isset($gender)) {
+    switch ($gender) {
+      case "male":
+        $gender = 1;
+        break;
+      case "female":
+        $gender = 2;
+        break;
+      case "other":
+        $gender = 0;
+        break;
+      default:
         $gender = null;
     }
+  } else {
+    $gender = null;
+  }
 
   //Flags
   $firstnameError = false;
@@ -80,12 +81,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usernameError = true;
     $errors[] = "Der Benutzername muss mindestens 3 Zeichen lang sein.";
   }
-  
+
   $UsernameError = !UsernameAvailable($Username);
   if ($UsernameError) {
     $errors[] = "Der Benutzername ist bereits vergeben.";
   }
- 
+
   if (empty($errors)) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $roleID = 2;
@@ -95,25 +96,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt = $conn->prepare($preparedInsertStatemant);
 
     if (!$stmt) {
-        die("Fehler bei der Vorbereitung der Abfrage: " . $conn->error);
+      die("Fehler bei der Vorbereitung der Abfrage: " . $conn->error);
     }
 
     $stmt->bind_param("sssisssis", $Username, $email, $hashedPassword, $roleID, $firstname, $lastName, $birthday, $gender, $status);
 
     if ($stmt->execute()) {
-        $execution = true;
-        $_SESSION["loggedin"] = true;
-        $_SESSION["username"] = $Username;
+      $execution = true;
+      $_SESSION["loggedin"] = true;
+      $_SESSION["username"] = $Username;
 
-        updateUserInformation($Username);
-      } else {
-        $execution = false;
-        die("Fehler beim Anlegen: " . $stmt->error);
+      updateUserInformation($Username);
+    } else {
+      $execution = false;
+      die("Fehler beim Anlegen: " . $stmt->error);
     }
     $stmt->close();
-    }
-  } 
-  ?>
+  }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="de">
@@ -121,7 +122,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <title>Sign-Up</title>
   <style>
     .background {
@@ -152,8 +154,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2">
 
                     <div class="form-floating mb-2">
-                      <input type="text" id="firstName" required class="form-control form-control-lg <?php if ($firstnameError) echo "is-invalid";
-                                                                                                      else "is-valid"; ?>" placeholder="first name" name="formFirstname" value="<?php if (isset($firstname)) echo $firstname; ?>" />
+                      <input type="text" id="firstName" required
+                        class="form-control form-control-lg <?php if ($firstnameError)
+                          echo "is-invalid";
+                        else
+                          "is-valid"; ?>" placeholder="first name"
+                        name="formFirstname" value="<?php if (isset($firstname))
+                          echo $firstname; ?>" />
                       <label for="firstName">First Name</label>
                     </div>
 
@@ -161,8 +168,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2">
 
                     <div class="form-floating mb-2">
-                      <input type="text" id="lastName" required class="form-control form-control-lg <?php if ($lastNameError) echo "is-invalid";
-                                                                                                    else "is-valid"; ?>" placeholder="last name" name="formLastname" value="<?php if (isset($lastName)) echo $lastName; ?>" />
+                      <input type="text" id="lastName" required
+                        class="form-control form-control-lg <?php if ($lastNameError)
+                          echo "is-invalid";
+                        else
+                          "is-valid"; ?>" placeholder="last name"
+                        name="formLastname" value="<?php if (isset($lastName))
+                          echo $lastName; ?>" />
                       <label for="lastName">Last Name</label>
                     </div>
 
@@ -173,8 +185,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2 d-flex align-items-center">
 
                     <div class="form-floating mb-2 datepicker w-100">
-                      <input type="date" id="birthdayDate" required class="form-control form-control-lg <?php if ($birtdayError) echo "is-invalid";
-                                                                                                        else "is-valid"; ?>" placeholder="Birthday" name="formBirthdate" value="<?php if (isset($birthday)) echo $birthday; ?>" />
+                      <input type="date" id="birthdayDate" required
+                        class="form-control form-control-lg <?php if ($birtdayError)
+                          echo "is-invalid";
+                        else
+                          "is-valid"; ?>" placeholder="Birthday"
+                        name="formBirthdate" value="<?php if (isset($birthday))
+                          echo $birthday; ?>" />
                       <label for="birthdayDate">Birthday</label>
                     </div>
 
@@ -182,28 +199,39 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2">
                     <h6 class="mb-2 pb-1">Gender: </h6>
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" required name="formGender" id="femaleGender" value="female" <?php if (isset($gender) && $gender == "female") echo "checked" ?> />
-                      <label class="form-check-label" for="femaleGender">Female</label>
-                    </div>
+                      <input class="form-check-input" type="radio" required name="formGender" id="femaleGender"
+                        value="female" <?php if (isset($gender) && $gender == "female")
+                          echo "checked" ?> />
+                        <label class="form-check-label" for="femaleGender">Female</label>
+                      </div>
 
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" required name="formGender" id="maleGender" value="male" <?php if (isset($gender) && $gender == "male") echo "checked" ?> />
-                      <label class="form-check-label" for="maleGender">Male</label>
-                    </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" required name="formGender" id="maleGender"
+                          value="male" <?php if (isset($gender) && $gender == "male")
+                          echo "checked" ?> />
+                        <label class="form-check-label" for="maleGender">Male</label>
+                      </div>
 
-                    <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" required name="formGender" id="otherGender" value="other" <?php if (isset($gender) && $gender == "other") echo "checked" ?> />
-                      <label class="form-check-label" for="otherGender">Other</label>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" required name="formGender" id="otherGender"
+                          value="other" <?php if (isset($gender) && $gender == "other")
+                          echo "checked" ?> />
+                        <label class="form-check-label" for="otherGender">Other</label>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <div class="row">
-                  <div class="col-md-6 mb-2 pb-2">
+                  <div class="row">
+                    <div class="col-md-6 mb-2 pb-2">
 
-                    <div class="form-floating mb-1">
-                      <input type="email" id="emailAddress" required class="form-control form-control-lg <?php if ($EMailError) echo "is-invalid";
-                                                                                                          else "is-valid"; ?>" placeholder="name@example.com" name="formEMail" value="<?php if (isset($email)) echo $email; ?>" />
+                      <div class="form-floating mb-1">
+                        <input type="email" id="emailAddress" required
+                          class="form-control form-control-lg <?php if ($EMailError)
+                          echo "is-invalid";
+                        else
+                          "is-valid"; ?>" placeholder="name@example.com"
+                        name="formEMail" value="<?php if (isset($email))
+                          echo $email; ?>" />
                       <label class="form-label" for="emailAddress">E-Mail</label>
                     </div>
 
@@ -211,8 +239,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                   <div class="col-md-6 mb-2 pb-2">
 
                     <div class="form-floating mb-2">
-                      <input type="text" id="username" required class="form-control form-control-lg <?php if ($UsernameError) echo "is-invalid";
-                                                                                                    else "is-valid"; ?>" placeholder="Username" name="formUsername" autocomplete="off" value="<?php if (isset($Username)) echo $Username; ?>" />
+                      <input type="text" id="username" required
+                        class="form-control form-control-lg <?php if ($UsernameError)
+                          echo "is-invalid";
+                        else
+                          "is-valid"; ?>" placeholder="Username"
+                        name="formUsername" autocomplete="off" value="<?php if (isset($Username))
+                          echo $Username; ?>" />
                       <label for="username">Username</label>
                     </div>
 
@@ -222,15 +255,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="row">
                   <div class="col-md-6 mb-2 pb-2">
                     <div class="form-floating mb-2">
-                      <input type="password" id="passwordfirst" required class="form-control form-control-lg" placeholder="password" name="formPassword" />
+                      <input type="password" id="passwordfirst" required class="form-control form-control-lg"
+                        placeholder="password" name="formPassword" />
                       <label for="passwordfirst">Password</label>
                     </div>
                   </div>
 
                   <div class="col-md-6 mb-1 pb-1">
                     <div class="form-floating mb-2">
-                      <input type="password" id="passwordsecond" required class="form-control form-control-lg <?php if ($passwordDoesNotMatch) echo "is-invalid";
-                                                                                                              else "is-valid"; ?>" placeholder="password" name="formPasswordSecond" />
+                      <input type="password" id="passwordsecond" required
+                        class="form-control form-control-lg <?php if ($passwordDoesNotMatch)
+                          echo "is-invalid";
+                        else
+                          "is-valid"; ?>" placeholder="password"
+                        name="formPasswordSecond" />
                       <label for="passwordsecond">Repeat Password</label>
                     </div>
                   </div>
@@ -238,13 +276,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </div>
 
                 <div class="">
-                  <button id="SignUp" class="btn btn-primary btn-lg btn-block w-100" data-bs-toggle="modal" data-bs-target="#execModal" type="submit">Sign-Up</button>
+                  <button id="SignUp" class="btn btn-primary btn-lg btn-block w-100" data-bs-toggle="modal"
+                    data-bs-target="#execModal" type="submit">Sign-Up</button>
                 </div>
-                <?php if (isset($emptyForm) && $emptyForm) : ?>
+                <?php if (isset($emptyForm) && $emptyForm): ?>
                   <p class="m-3 mx-auto text-center text-danger">The form is incomplete.</p>
                 <?php endif; ?>
 
-                <?php if (isset($passwordDoesNotMatch) && $passwordDoesNotMatch) : ?>
+                <?php if (isset($passwordDoesNotMatch) && $passwordDoesNotMatch): ?>
                   <p class="m-3 mx-auto text-center text-danger">The passwords do not match.</p>
                 <?php endif; ?>
               </form>
@@ -259,19 +298,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="modal-content">
 
         <div class="modal-body">
-        The following issues have occurred:
+          The following issues have occurred:
           <?php
-            foreach ($errors as $error) {
-              echo "<li>" . sanitize_input($error) . "</li>";
-            }
+          foreach ($errors as $error) {
+            echo "<li>" . sanitize_input($error) . "</li>";
+          }
           ?>
         </div>
       </div>
     </div>
   </div>
-</div>
+  </div>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       <?php if (isset($errors) && !empty($errors)): ?>
         var ErrorModal = new bootstrap.Modal(document.getElementById('ErrorModal'));
         ErrorModal.show();
@@ -285,35 +324,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-body">
-        You have successfully registered!
+          You have successfully registered!
         </div>
       </div>
     </div>
   </div>
-</div>
+  </div>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       <?php if (isset($execution) && $execution === true): ?>
         var successModal = new bootstrap.Modal(document.getElementById('successModal'));
         successModal.show();
-        setTimeout(function() {
-        window.location.href = 'index.php';
-      }, 1000);
+        setTimeout(function () {
+          window.location.href = 'index.php';
+        }, 1000);
       <?php endif; ?>
     });
-</script>
+  </script>
 </body>
 
-<script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
-      integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
-      crossorigin="anonymous"
-    ></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+  integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="./app.js"></script>
+
 </html>

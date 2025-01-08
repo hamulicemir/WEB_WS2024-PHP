@@ -92,7 +92,6 @@
                                             name="OldPassword"
                                             value=""
                                             required>
-                                            <!-- Show/Hide Password Eye-->
 
                                         <label for="floatingOldPassword">Old Password</label>
                                         <?php if ($errors["formPassword"]): ?>
@@ -108,7 +107,6 @@
                                             placeholder="NewPassword"
                                             name="NewPassword"
                                             required>
-                                            <!-- Show/Hide Password Eye-->
 
                                         <label for="floatingNewPassword">New Password</label>
                                     </div>
@@ -121,7 +119,6 @@
                                             placeholder="RepeatNewPassword"
                                             name="RepeatNewPassword"
                                             required>
-                                            <!-- Show/Hide Password Eye-->
 
                                         <label for="floatingRepeatNewPassword">Repeat New Password</label>
                                         <?php if ( $errors["repeat_new_password"]): ?>

@@ -4,7 +4,7 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 include './inc/dbconnection.php';
 include './inc/functions.php';
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION['UserInformation']['Role_ID'] != 1) {
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
    header('Location: login.php');
 }
 

@@ -10,7 +10,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true || $_SESSION
 }
 if(!$conn){ die("Database Connection Failed: " . mysqli_connect_error());  }
 
-$news_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$news_id = isset($_GET['id']) ? intval($_GET['id']) : 0; //zieht news aus URL mit GET
 
 if ($news_id > 0) {
     $sql = "DELETE FROM News WHERE News_ID = ?";
