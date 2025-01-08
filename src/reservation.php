@@ -14,7 +14,6 @@ if (!$conn) {
     die("Database Connection Failed: " . mysqli_connect_error());
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $checkin = sanitize_input($_POST['checkin']);
     $checkout = sanitize_input($_POST['checkout']);
@@ -22,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $parking = sanitize_input(isset($_POST['parking']));
     $pets = sanitize_input(isset($_POST['pets']));
     $room = sanitize_input($_POST['room']);
+    $peopleNo = 1;
     $peopleNo = sanitize_input($_POST['PeopleNo']);
     $roomNo = null;
 
@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <?php
                                     $stmt->close();
                                     ?>
-                                    <div class="col-md-6 mt-3 mb-4"">
+                                    <div class="col-md-6 mt-3 mb-4">
                                             <div class=" form-group">
                                         <label class="form-label" for="PeopleNo">Number of People</label>
                                         <input type="number" id="PeopleNo" class="form-control" require data-mdb-input-init value="1" min="1" max="6"/>

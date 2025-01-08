@@ -23,8 +23,6 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
 </head>
 
 <body>
-    <div class="header">
-    </div>
     <?php include './inc/nav.php'; ?>
 
     <main class="container my-5">
@@ -33,8 +31,7 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
                 <h1 class="mb-4">Latest Posts</h1>
             </div>
             <?php
-            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && $_SESSION['UserInformation']['Role_ID'] === 1) :
-            ?>
+            if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] && $_SESSION['UserInformation']['Role_ID'] === 1)  : // Admin User haben Role_ID = 1 ?>
                 <div class="col-4 mb-4 d-flex justify-content-end">
                     <a href="./news-form.php"><button type="button" class="btn btn-primary me-3">New Post</button></a>
                 </div>
@@ -88,17 +85,22 @@ $thumbnailsDir = './Pictures/Thumbnails-resized/';
     </div>
     
     <script>
+        //wartet bis alle Inhalte HTML geladen wurden
         document.addEventListener("DOMContentLoaded", function() {
+            //sucht alle buttons welche js attribut data-bs-toggle="modal" haben & iteriert diese
             document.querySelectorAll('button[data-bs-toggle="modal"]').forEach(function(button) {
+                //Eventlistener, welche wartet bis der Button tatsächlich geklickt wird
                 button.addEventListener('click', function() {
+                    //sucht Attribut raus und speichert die NewsID (aus der Datenbank von oben)
                     var newsID = this.getAttribute('data-news-id');
                     document.getElementById('confirmDeleteButton').setAttribute('data-news-id', newsID);
                 });
             });
-
+            //Eventlistener für confirmDeleteButton
             document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+                //zieht sich aus attribut wieder die NewsID
                 var newsID = this.getAttribute('data-news-id');
-                window.location.href = 'news_delete.php?id=' + newsID;
+                window.location.href = 'news_delete.php?id=' + newsID; //sendet uns zu php-datei mit news_ID
             });
         });
     </script>

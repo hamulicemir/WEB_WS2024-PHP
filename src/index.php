@@ -20,7 +20,7 @@
     </div>
   </div>
   <hr>
-  <div class="container-fluid d-flex align-items-center mb-5 mt-5"> <!-- mt-5 hinzugefügt -->
+  <div class="container-fluid d-flex align-items-center mb-5 mt-5">
     <div class="row w-100">
       <div class="col-12 col-md-6 p-0">
         <div id="carouselExampleControls" class="carousel slide h-100" data-bs-ride="carousel">
@@ -71,7 +71,7 @@
     <hr>
     <div class="row">
       <div class="col-12 text-center">
-        <p class="lead">"Enjoy our exquisite dining options, best koktels, and local made wine ."</p> <!-- Neue Unterschrift hinzugefügt -->
+        <p class="lead">"Enjoy our exquisite dining options, best koktels, and local made wine ."</p>
       </div>
     </div>
   </div>

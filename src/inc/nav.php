@@ -12,6 +12,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <a class="navbar-brand" href="./index.php">
         <img src="./Pictures/Icon.png" alt="Sonnenschuss-Logo" width="110" height="60">
       </a>
+      <!-- Burger Menu für navbar content (verbunden mit id des divs) -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
         aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
