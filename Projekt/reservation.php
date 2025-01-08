@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $parking = sanitize_input(isset($_POST['parking']));
     $pets = sanitize_input(isset($_POST['pets']));
     $room = sanitize_input($_POST['room']);
+    $peopleNo = sanitize_input($_POST['PeopleNo']);
     $roomNo = null;
 
     if (isset($room) && !empty($room)) {
@@ -61,6 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $days = abs(strtotime($checkout) - strtotime($checkin)) / 86400;
 
+            if ($peopleNo > 1) {
+                $price += 50 * ($peopleNo - 1);
+            }
             $totalPrice = $price * $days;
             $totalPrice += $breakfast ? 50 : 0;
             $totalPrice += $parking ? 75 : 0;
@@ -77,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -138,30 +142,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input" id="breakfast"
                                                 name="breakfast">
-                                            <label class="form-check-label" for="breakfast">Breakfast</label>
+                                            <label class="form-check-label" for="breakfast">Breakfast (+50€)</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input" id="parking" name="parking">
-                                            <label class="form-check-label" for="parking">Parking</label>
+                                            <label class="form-check-label" for="parking">Parking (+75€)</label>
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-check">
                                             <input type="checkbox" class="form-check-input" id="pets" name="pets">
-                                            <label class="form-check-label" for="pets">Pets</label>
+                                            <label class="form-check-label" for="pets">Pets (+30€)</label>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="row">
                                     <?php
-                                        $stmt = $conn->prepare("SELECT Room_ID, Room_Type, Availability FROM Room WHERE Availability > 0");
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
+                                    $stmt = $conn->prepare("SELECT Room_ID, Room_Type, Availability FROM Room WHERE Availability > 0");
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
                                     ?>
                                     <div class="col-md-6 mt-3 mb-4">
-                                        <label for="room">Room Selection</label>
+                                        <label class="form-label" for="room">Room Selection</label>
                                         <select class="form-select" id="room" name="room" required="">
                                             <?php while ($row = $result->fetch_assoc()): ?>
+                                                <?php 
+                                                    
+                                                    ?>
                                                 <option value="<?php echo $row['Room_ID']; ?>">
                                                     <?php echo $row['Room_Type'] . " - Available: " . $row['Availability']; ?>
                                                 </option>
@@ -171,31 +181,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <?php
                                     $stmt->close();
                                     ?>
-                                </div>
-                                <hr>
-                                <div class="d-flex align-items-center">
-                                    <h3>Total: <span id="price"><?php echo $totalPrice; ?></span></h3>
-                                    <button id="CheckModalButton" type="button" class="btn btn-primary ms-auto"
-                                        data-bs-toggle="modal" data-bs-target="#CheckModal">Reserve</button>
-                                </div>
-                                <div class="modal fade" id="CheckModal" tabindex="-1" aria-label="Reservation Check">
-                                    <div class="modal-dialog modal-dialog-centered">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Reservation</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Are you sure you want to do this reservation?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save Reservation</button>
-                                            </div>
-                                        </div>
+                                    <div class="col-md-6 mt-3 mb-4"">
+                                            <div class=" form-group">
+                                        <label class="form-label" for="PeopleNo">Number of People</label>
+                                        <input type="number" id="PeopleNo" class="form-control" require data-mdb-input-init value="1" min="1" max="6"/>
                                     </div>
+                                </div>
+                        </div>
+                        <hr>
+                        <div class="d-flex align-items-center">
+                            <h3>Total: <span id="price"><?php echo $totalPrice; ?></span></h3>
+                            <button id="CheckModalButton" type="button" class="btn btn-primary ms-auto"
+                                data-bs-toggle="modal" data-bs-target="#CheckModal">Reserve</button>
+                        </div>
+                        <div class="modal fade" id="CheckModal" tabindex="-1" aria-label="Reservation Check">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Reservation</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to do this reservation?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save Reservation</button>
+                                    </div>
+                                </div>
+                            </div>
                             </form>
                         </div>
                     </div>
@@ -221,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             <?php if (isset($error) && !empty($error)): ?>
                 var ErrorModal = new bootstrap.Modal(document.getElementById('ErrorModal'));
                 ErrorModal.show();
@@ -248,7 +264,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             <?php if (isset($success) && $success === true): ?>
                 var successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
